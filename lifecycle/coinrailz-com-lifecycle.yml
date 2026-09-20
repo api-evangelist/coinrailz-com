@@ -1,0 +1,47 @@
+generated: '2026-09-19'
+method: searched
+description: Versioning and lifecycle facts as published. No deprecation policy, no Sunset/Deprecation header support,
+  no SLA and no status page were found; those are recorded as absent, so no StatusPage or Deprecation pointer is
+  emitted.
+versioning:
+  scheme: none-in-path
+  current:
+    openapi_info_version: 3.0.0
+    x402_services_spec_version: 2.1.0
+    agent_card_version: 1.1.0
+    x402_manifest: x402-2.12
+    a2a_protocol: 0.3.0
+    ap2: '0.1'
+    mpp: '1.0'
+  path_versions:
+  - /a2a/v1
+  - /ap2/v1/merchant
+  note: REST service paths (/x402/<service>, /api/...) carry no version segment; only the A2A and AP2 endpoints
+    are versioned.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  note: 'No deprecated: true operation in either spec; no policy page found (no /changelog, /deprecations or /roadmap
+    route in the SPA bundle).'
+sla:
+  url: null
+  uptime_target: null
+  note: No SLA published. maxTimeoutSeconds 60 in the x402 challenge is a payment validity window, not an SLA.
+status_page: null
+status_page_note: 'status.coinrailz.com has no DNS record; https://coinrailz.com/x402/payment-status is a payment
+  lookup endpoint, not a status page; the Cloudflare gateway root reports {status: healthy} for itself only.'
+changelog:
+  url: null
+  note: 'No dated changelog. llms.txt carries "Last updated: 2026-09-16"; openapi.json and pricing.json carry updated
+    2026-09-19. The coinrailz-mcp PyPI metadata points its Changelog at https://github.com/tdnupe3/mcp-server-coinrailz/releases.'
+deprecated_operations: []
+freshness_signals:
+- source: https://coinrailz.com/.well-known/api-catalog
+  updated: '2026-09-19T21:47:05.061Z'
+- source: https://coinrailz.com/.well-known/pricing.json
+  updated: '2026-09-19'
+- source: https://coinrailz.com/llms.txt
+  updated: '2026-09-16'
+- source: https://coinrailz.com/.well-known/agent-instructions.json
+  lastUpdated: '2026-03-17'

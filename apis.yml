@@ -1,23 +1,203 @@
 aid: coinrailz-com
 name: Coin Railz
-description: 'Coin Railz is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Coin Railz (Kellogg Holdings LLC) is pay-per-call financial and data infrastructure built for autonomous
+  AI agents: 80 metered services - crypto and DeFi intelligence, trading signals, wallet and contract risk, prediction-market
+  odds (Kalshi, Polymarket), NASA/ESA satellite data, IoT/DePIN feeds, AI inference, real estate and compliance
+  checks - paid per request with x402 USDC micropayments on Base, Arc and Solana, or with card-funded prepaid credits.
+  It publishes two OpenAPIs, a conformant A2A agent card, an open remote MCP server with 80 tools, an llms.txt,
+  MPP and AP2 payment manifests, and an ERC-4626 USDC yield vault.'
 url: https://raw.githubusercontent.com/api-evangelist/coinrailz-com/refs/heads/main/apis.yml
+image: https://coinrailz.com/apple-touch-icon.png
 x-type: company
 x-source: harvest:a2a-registry
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-19 (was stub)
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
 - Company
-apis: []
+- Payments
+- Agents
+- x402
+- Micropayments
+- Cryptocurrency
+- DeFi
+- Blockchain
+- Stablecoins
+- USDC
+- Prediction Markets
+- Satellite Data
+- IoT
+- Trading
+- Compliance
+- MCP
+- A2A
+apis:
+- aid: coinrailz-com:agent-payment-api
+  name: Coin Railz Agent Payment API
+  description: 'The full Coin Railz surface: onboarding and prepaid-credit operations (free $5 trial key, Stripe
+    hosted checkout), the 80 metered /x402/<service> endpoints, MPP (Machine Payments Protocol) twins of the core
+    services, the ERC-4626 USDC yield vault on Base and the Kamino-backed Solana yield portal, plus the discovery
+    manifests. OpenAPI 3.1.0, 106 operations, all with operationIds; auth is X-API-KEY / Bearer (cr_live_ prepaid
+    credits), x402 X-PAYMENT or MPP Authorization: Payment.'
+  image: https://coinrailz.com/apple-touch-icon.png
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com
+  tags:
+  - Payments
+  - Agents
+  - x402
+  - Yield
+  - Onboarding
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-agent-payment-api-openapi.yml
+  - type: OpenAPI
+    name: OpenAPI (provider-hosted)
+    url: https://coinrailz.com/openapi.json
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: Overlay
+    url: overlays/coinrailz-com-agent-payment-api-overlay.yaml
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+- aid: coinrailz-com:x402-services
+  name: Coin Railz x402 Micropayment Services
+  description: 'The 80 pay-per-request services as a standalone OpenAPI 3.0.3 contract (one POST /x402/<service>
+    per service, price in the description): gas and token oracles, DEX liquidity, whale alerts, wallet risk, portfolio
+    analytics, smart-contract audits, bridge quotes, agent wallets and KYA identity, Kalshi/Polymarket odds, NASA
+    Earthdata and ESA imagery, fleet telematics and sensor data, GPT-4o-mini inference, property valuation, fraud
+    and AML checks. Each endpoint returns an HTTP 402 x402 v2 challenge until paid.'
+  image: https://coinrailz.com/apple-touch-icon.png
+  humanURL: https://coinrailz.com/x402/catalog
+  baseURL: https://coinrailz.com
+  tags:
+  - x402
+  - Micropayments
+  - DeFi
+  - Prediction Markets
+  - Satellite Data
+  - IoT
+  - AI Inference
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-x402-services-openapi.yml
+  - type: OpenAPI
+    name: OpenAPI (provider-hosted)
+    url: https://coinrailz.com/openapi-x402-services.json
+  - type: Overlay
+    url: overlays/coinrailz-com-x402-services-overlay.yaml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:mcp
+  name: Coin Railz MCP Server
+  description: 'Remote MCP server on the primary domain: POST https://coinrailz.com/mcp (JSON-RPC 2.0). tools/list
+    is open and returns 80 tools with input and output schemas; tool calls are metered (X-API-KEY prepaid credits
+    or x402). A local stdio server ships as the PyPI package coinrailz-mcp. Every tool binds one-to-one to a /x402/<service>
+    operation in the x402 services OpenAPI (see the tool crosswalk).'
+  image: https://coinrailz.com/apple-touch-icon.png
+  humanURL: https://coinrailz.com/mcp-integration-guide
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - MCP
+  - Agents
+  - Tools
+  properties:
+  - type: MCPServer
+    url: mcp/coinrailz-com-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/coinrailz-com-tool-crosswalk.yml
+  - type: Documentation
+    url: https://coinrailz.com/.well-known/mcp-integration.json
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/coinrailz-com-domain-security.yml
+- type: Authentication
+  url: authentication/coinrailz-com-authentication.yml
 - type: Website
   url: https://coinrailz.com/
+- type: DeveloperPortal
+  url: https://coinrailz.com/developers
+- type: Documentation
+  url: https://coinrailz.com/docs
+- type: GettingStarted
+  url: https://coinrailz.com/quickstart
+- type: APIReference
+  url: https://coinrailz.com/x402/catalog
+- type: Pricing
+  url: https://coinrailz.com/pricing
+- type: SignUp
+  url: https://coinrailz.com/free-agent-registration
+- type: Login
+  url: https://coinrailz.com/api-keys
+  name: API keys dashboard (/dashboard/api-keys 301s here)
+- type: Support
+  url: https://coinrailz.com/contact-us
+- type: TermsOfService
+  url: https://coinrailz.com/terms-of-service
+- type: PrivacyPolicy
+  url: https://coinrailz.com/privacy-policy
+- type: GitHubOrganization
+  url: https://github.com/tdnupe3
+  name: GitHub (maintainer account tdnupe3; the coinrailz org named in package metadata does not exist)
+- type: LLMsTxt
+  url: llms/coinrailz-com-llms.txt
+- type: LLMsTxt
+  name: llms.txt (provider-hosted)
+  url: https://coinrailz.com/llms.txt
+- type: AgentCard
+  url: a2a/coinrailz-com-a2a.yml
+- type: AgentCard
+  name: Agent card (provider-hosted)
+  url: https://coinrailz.com/.well-known/agent-card.json
+- type: MCPServer
+  url: mcp/coinrailz-com-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/coinrailz-com-tool-crosswalk.yml
+- type: WellKnown
+  url: well-known/coinrailz-com-well-known.yml
+- type: APICatalog
+  url: well-known/coinrailz-com-api-catalog.json
+- type: OpenAIPluginManifest
+  url: well-known/coinrailz-com-ai-plugin.json
+- type: Packages
+  url: packages/coinrailz-com-packages.yml
+- type: SDKs
+  url: packages/coinrailz-com-packages.yml
+- type: Conformance
+  url: conformance/coinrailz-com-conformance.yml
+- type: ErrorCatalog
+  url: errors/coinrailz-com-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/coinrailz-com-lifecycle.yml
+- type: Sandbox
+  url: sandbox/coinrailz-com-sandbox.yml
+- type: Conventions
+  url: conventions/coinrailz-com-conventions.yml
+- type: Idempotency
+  url: conventions/coinrailz-com-conventions.yml
+- type: RegulatoryPosture
+  url: regulatory/coinrailz-com-regulatory-posture.yml
+- type: Plans
+  url: plans/coinrailz-com-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/coinrailz-com-rate-limits.yml
+- type: VulnerabilityDisclosure
+  url: security/coinrailz-com-vulnerability-disclosure.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgentInstructions
+  url: well-known/coinrailz-com-agent-instructions.json
+- type: X402
+  url: well-known/coinrailz-com-x402.json
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 47
+  pass: local-v3

@@ -1,0 +1,42 @@
+generated: '2026-09-19'
+method: searched
+source: https://coinrailz.com/.well-known/agent-instructions.json + https://coinrailz.com/api/auth/capabilities
+  + live 402 body from POST https://coinrailz.com/x402/ping
+description: 'Coin Railz publishes no separate sandbox environment, test network or test-mode key prefix: every
+  key is cr_live_ and every service runs against mainnet data. What it publishes instead is a free-trial path and
+  a free, unpaid 402 rehearsal, recorded here verbatim. Nothing below is a test value invented by us.'
+environments:
+- name: production
+  base_url: https://coinrailz.com
+  note: Only environment. Payment networks are mainnets (Base eip155:8453, Arc eip155:5042, Ethereum, Arbitrum,
+    Solana mainnet).
+key_prefixes:
+- prefix: cr_live_
+  mode: live
+  note: The only documented prefix; trial keys share it.
+free_trial:
+  endpoint: GET https://coinrailz.com/api/m2m/credits/trial
+  operationId: getTrialKey
+  credits_usd: 5
+  approx_calls: 80-100
+  expires: 7 days
+  limit: 1 per IP per 7 days
+  returned_once: true
+  note: '"SAVE the key - it is not stored in plaintext and cannot be retrieved again." (402 body). Not exercised
+    by this pass: calling it provisions a real key.'
+first_call_free:
+  services:
+  - gas-price-oracle
+  - token-metadata
+  note: '"FREE for first-time users" per the stdio MCP README and the extended agent card (standard per-IP/UA eligibility).'
+unpaid_rehearsal:
+  endpoint: POST https://coinrailz.com/x402/ping
+  operationId: ping
+  observed_status: 402
+  note: Without payment the endpoint returns the full x402 challenge (PAYMENT-REQUIRED header, accepts[] entries
+    for Base, Arc and Solana) so a client can test challenge parsing and EIP-712 signing before spending; the paid
+    ping costs $0.25 USDC.
+test_values: []
+test_clocks: null
+x-caveat: No sandbox pointer is emitted as a Console/Playground claim beyond the free-trial path; the provider itself
+  calls this a trial, not a sandbox.

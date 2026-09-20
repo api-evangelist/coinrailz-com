@@ -1,0 +1,227 @@
+generated: '2026-09-19'
+method: probed
+source: https://coinrailz.com/.well-known/pricing.json (machine-readable, updated 2026-09-19) + https://coinrailz.com/.well-known/agent-instructions.json
+  (credit tiers) + https://coinrailz.com/api/yield/manifest (vault fees)
+pricing_url: https://coinrailz.com/pricing
+model: pay-per-call USDC micropayments (x402 / MPP / AP2) or prepaid card-funded credits; no subscriptions
+currency: USD (USDC-settled on-chain; USD via Stripe for credits)
+plan_count: 5
+plans:
+- name: Pay-per-call (x402)
+  price: 0.00-10.00 USDC per call
+  billing_period: per call
+  included_quota: none
+  overage: n/a
+  limits:
+    services: 82
+    min_price_usd: 0
+    max_price_usd: 10
+    processing_fee: 1.5% + $0.01 per transaction (x402.json / agent.json)
+  note: 'Free trial: $5 credits via GET /api/m2m/credits/trial, 1 per IP per 7 days; gas-price-oracle and token-metadata
+    are first-call-free.'
+- name: Credits $5
+  price: 5 USD
+  billing_period: one-time prepaid
+  included_quota: ~80-100 service calls
+  overage: buy more credits
+  source: agent-instructions.json#quickStart.paths.cardPayment.tiers
+- name: Credits $10
+  price: 10 USD
+  billing_period: one-time prepaid
+  included_quota: ~200 service calls
+  overage: buy more credits
+- name: Credits $25
+  price: 25 USD
+  billing_period: one-time prepaid
+  included_quota: ~500 service calls
+  overage: buy more credits
+  recommended: true
+- name: Credits $100
+  price: 100 USD
+  billing_period: one-time prepaid
+  included_quota: ~2,000 service calls
+  overage: buy more credits
+price_tiers_by_service:
+- tier: Basic
+  range: $0.05 - $0.25
+- tier: Standard
+  range: $0.25 - $1.00
+- tier: Premium
+  range: $1.00 - $5.00
+- tier: Enterprise
+  range: $5.00 - $10.00
+service_prices:
+- id: ping
+  price_usd: 0.25
+- id: first-call
+  price_usd: 0.05
+- id: gas-price-oracle
+  price_usd: 0.1
+- id: token-metadata
+  price_usd: 0.1
+- id: dex-liquidity
+  price_usd: 0.2
+- id: approval-manager
+  price_usd: 0.2
+- id: token-price
+  price_usd: 0.25
+- id: token-sentiment
+  price_usd: 0.25
+- id: transaction-builder
+  price_usd: 0.3
+- id: whale-alerts
+  price_usd: 0.35
+- id: batch-quote
+  price_usd: 0.4
+- id: multi-chain-balance
+  price_usd: 0.5
+- id: trending-tokens
+  price_usd: 0.5
+- id: portfolio-tracker
+  price_usd: 0.5
+- id: wallet-risk
+  price_usd: 0.5
+- id: trade-signals
+  price_usd: 0.75
+- id: payment-processing
+  price_usd: 0.5
+- id: contract-scan
+  price_usd: 1
+- id: instant-agent-wallet
+  price_usd: 1
+- id: instant-api-key
+  price_usd: 1
+- id: agent-create-wallet
+  price_usd: 2
+- id: seamless-chain-bridge
+  price_usd: 2
+- id: verified-agent-identity
+  price_usd: 5
+- id: compliance-consultation
+  price_usd: 5
+- id: smart-contract-audit
+  price_usd: 10
+- id: property-valuation
+  price_usd: 0.75
+- id: lease-analysis
+  price_usd: 1
+- id: construction-progress
+  price_usd: 1.5
+- id: fraud-detection
+  price_usd: 0.75
+- id: credit-risk-score
+  price_usd: 1.25
+- id: compliance-check
+  price_usd: 1.75
+- id: sentiment-analysis
+  price_usd: 0.5
+- id: trading-signal
+  price_usd: 1
+- id: portfolio-optimization
+  price_usd: 2
+- id: correlation-matrix
+  price_usd: 0.75
+- id: risk-metrics
+  price_usd: 1
+- id: arbitrage-scanner
+  price_usd: 1.25
+- id: polymarket-events
+  price_usd: 0.25
+- id: polymarket-odds
+  price_usd: 0.5
+- id: polymarket-search
+  price_usd: 0.25
+- id: prediction-market-odds
+  price_usd: 0.5
+- id: kalshi-markets
+  price_usd: 0.25
+- id: kalshi-odds
+  price_usd: 0.5
+- id: kalshi-search
+  price_usd: 0.25
+- id: stock-sentiment
+  price_usd: 0.4
+- id: forex-sentiment
+  price_usd: 0.4
+- id: solana-yield-finder
+  price_usd: 0.05
+- id: fire-alerts
+  price_usd: 0.05
+- id: weather-imagery
+  price_usd: 0.05
+- id: vegetation
+  price_usd: 0.1
+- id: flood-detection
+  price_usd: 0.1
+- id: air-quality
+  price_usd: 0.05
+- id: land-use
+  price_usd: 0.15
+- id: satellite-earthdata
+  price_usd: 0.25
+- id: earthdata-granules
+  price_usd: 0.25
+- id: earthdata-precipitation
+  price_usd: 0.25
+- id: earthdata-sst
+  price_usd: 0.25
+- id: earthdata-soil-moisture
+  price_usd: 0.25
+- id: earthdata-ocean-color
+  price_usd: 0.25
+- id: fleet-telematics
+  price_usd: 0.1
+- id: weather-station-data
+  price_usd: 0.05
+- id: iot-sensor-reading
+  price_usd: 0.025
+- id: iot-device-stream
+  price_usd: 0.25
+- id: iot-bulk-data
+  price_usd: 0.5
+- id: ai-inference
+  price_usd: 0.05
+- id: prediction-market-spread
+  price_usd: 0.25
+- id: solana-yield-rates
+  price_usd: 0.05
+- id: solana-yield-deposit
+  price_usd: 0.1
+- id: b20-token-info
+  price_usd: 0.05
+- id: b20-transfer-check
+  price_usd: 0.1
+- id: b20-compliance-scan
+  price_usd: 0.25
+- id: robinhood-token-price
+  price_usd: 0.6
+- id: robinhood-dex-pools
+  price_usd: 1.25
+- id: robinhood-chain-stats
+  price_usd: 0.75
+- id: rh-stock-price
+  price_usd: 0.05
+- id: rh-bridge-usdc
+  price_usd: 0.75
+- id: vlt-usdc-deposit
+  price_usd: 0
+- id: vlt-usdc-withdraw
+  price_usd: 0
+- id: vlt-usdc-zap-withdraw
+  price_usd: 0
+- id: vlt-stats
+  price_usd: 0.05
+- id: rwa-nav-oracle
+  price_usd: 0.5
+- id: tokenized-yield-compare
+  price_usd: 0.25
+other_fees:
+  card_purchase_range: $1 - $2,500 (AP2 cardPayment block)
+  prepaid_minimum: $10 (payment-methods.json prepaid_credits.minimum_purchase)
+  yield_vault:
+    entry: 0.5%
+    performance: 15% of yield
+    exit: 0%
+    switch: 0%
+  solana_fee_percentage: 0.005
+enterprise: https://coinrailz.com/enterprise (contact page; no published enterprise price)

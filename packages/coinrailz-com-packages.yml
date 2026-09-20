@@ -1,0 +1,143 @@
+generated: '2026-09-19'
+method: searched
+source: https://coinrailz.com/llms.txt (SDK / Integration section) + registry metadata from registry.npmjs.org,
+  pypi.org/pypi/<pkg>/json and hub.docker.com, fetched 2026-09-19
+description: 'First-party Coin Railz client packages. Every npm and PyPI package is published by the single maintainer
+  tdnupe3 (GitHub: T. Kellogg, company ''Coin Railz'', blog https://coinrailz.com; llms.txt names the operator as
+  Kellogg Holdings LLC), so official: true throughout. NOTE ON SOURCE LINKS: the repository URLs declared in the
+  npm/PyPI metadata point at github.com/coinrailz/*, and that GitHub organisation does not exist (404 on github.com/coinrailz
+  and api.github.com/orgs/coinrailz); the actual code lives under https://github.com/tdnupe3/. Declared URLs are
+  kept in `declared_repository` and the reachable one in `source`.'
+packages:
+- language: javascript
+  registry: npm
+  name: '@coinrailz/agent-payments'
+  url: https://www.npmjs.com/package/@coinrailz/agent-payments
+  source: https://github.com/tdnupe3/coinrailz-sdk
+  install: npm install @coinrailz/agent-payments
+  official: true
+  version: 1.2.0
+  published: '2026-07-21'
+  note: Non-custodial USDC payment SDK; 76 bundled x402 services (Base + Solana).
+  declared_repository: https://github.com/coinrailz/agent-payments
+- language: javascript
+  registry: npm
+  name: '@coinrailz/agent-payments-solana'
+  url: https://www.npmjs.com/package/@coinrailz/agent-payments-solana
+  source: https://github.com/tdnupe3/coinrailz-sdk
+  install: npm install @coinrailz/agent-payments-solana
+  official: true
+  version: 1.0.7
+  published: '2026-01-04'
+  declared_repository: https://github.com/coinrailz/agent-payments-solana
+- language: javascript
+  registry: npm
+  name: coinrailz
+  url: https://www.npmjs.com/package/coinrailz
+  source: https://github.com/tdnupe3/coinrailz-sdk
+  install: npm install coinrailz
+  official: true
+  version: 1.3.2
+  published: '2026-08-15'
+  note: Unscoped "Official SDK for Coin Railz - 77 x402 micropayment services".
+  declared_repository: https://github.com/coinrailz/coinrailz-sdk
+- language: javascript
+  registry: npm
+  name: elizaos-plugin-coinrailz
+  url: https://www.npmjs.com/package/elizaos-plugin-coinrailz
+  source: https://github.com/tdnupe3/elizaos-plugin-coinrailz
+  install: npm install elizaos-plugin-coinrailz
+  official: true
+  version: 2.6.3
+  published: '2026-09-14'
+  note: Official ElizaOS plugin; the most recently released package.
+- language: javascript
+  registry: npm
+  name: coinrailz-agentkit
+  url: https://www.npmjs.com/package/coinrailz-agentkit
+  install: npm install coinrailz-agentkit
+  official: true
+  version: 1.1.0
+  published: '2026-06-09'
+  note: Coinbase AgentKit action provider for the USDC yield vault (6 actions).
+  declared_repository: https://github.com/coinrailz/agentkit
+- language: javascript
+  registry: npm
+  name: '@coinrailz/iot-payments'
+  url: https://www.npmjs.com/package/@coinrailz/iot-payments
+  install: npm install @coinrailz/iot-payments
+  official: true
+  version: 1.1.0
+  published: '2026-01-19'
+  note: IoT / DePIN device payments SDK.
+  declared_repository: https://github.com/coinrailz/iot-payments
+- language: javascript
+  registry: npm
+  name: '@coinrailz/ai-payments-sdk'
+  url: https://www.npmjs.com/package/@coinrailz/ai-payments-sdk
+  install: npm install @coinrailz/ai-payments-sdk
+  official: true
+  version: 1.0.1
+  published: '2026-01-04'
+  note: Superseded by @coinrailz/agent-payments (no release since 2026-01-04).
+- language: javascript
+  registry: npm
+  name: '@coinrailz/plugin-coinrailz'
+  url: https://www.npmjs.com/package/@coinrailz/plugin-coinrailz
+  source: https://github.com/tdnupe3/plugin-coinrailz
+  install: npm install @coinrailz/plugin-coinrailz
+  official: true
+  version: 1.0.1
+  published: '2025-12-30'
+  note: Earlier ElizaOS plugin, superseded by elizaos-plugin-coinrailz.
+- language: javascript
+  registry: npm
+  name: coinrailz-eliza-plugin
+  url: https://www.npmjs.com/package/coinrailz-eliza-plugin
+  source: https://github.com/tdnupe3/coinrailz-eliza-plugin
+  install: npm install coinrailz-eliza-plugin
+  official: true
+  version: 1.0.0
+  published: '2025-12-29'
+  note: Earliest ElizaOS plugin, superseded.
+- language: python
+  registry: pypi
+  name: coinrailz
+  url: https://pypi.org/project/coinrailz/
+  install: pip install coinrailz
+  official: true
+  version: 1.2.0
+  published: '2026-07-21'
+  note: Python twin of @coinrailz/agent-payments (same version and release date).
+  declared_repository: https://github.com/coinrailz/agent-payments-python
+- language: python
+  registry: pypi
+  name: coinrailz-solana
+  url: https://pypi.org/project/coinrailz-solana/
+  install: pip install coinrailz-solana
+  official: true
+  version: 1.0.2
+  published: '2026-01-04'
+  declared_repository: https://github.com/coinrailz/agent-payments-solana
+- language: python
+  registry: pypi
+  name: coinrailz-mcp
+  url: https://pypi.org/project/coinrailz-mcp/
+  source: https://github.com/tdnupe3/mcp-server-coinrailz
+  install: pip install coinrailz-mcp
+  official: true
+  version: 1.2.0
+  published: '2026-06-13'
+  note: Local stdio MCP server (python -m coinrailz_mcp), 63 tools; see mcp/.
+- language: docker
+  registry: dockerhub
+  name: tdnupe3/agent-payments
+  url: https://hub.docker.com/r/tdnupe3/agent-payments
+  install: docker pull tdnupe3/agent-payments
+  official: true
+  version: 1.0.2
+  published: '2026-01-04'
+  note: 'Tags: latest, 1.0.2, 1.0.1, 1.0.0 - all 2026-01.'
+currency_note: 'The catalogue advertises 80 services (openapi.json info.version 3.0.0, 2026-09-19) while the newest
+  core SDK release (@coinrailz/agent-payments / coinrailz 1.2.0, 2026-07-21) bundles 76 and the stdio MCP package
+  (2026-06-13) exposes 63: the hosted surface is ahead of every client package.'

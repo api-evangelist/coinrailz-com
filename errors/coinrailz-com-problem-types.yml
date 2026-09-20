@@ -1,0 +1,167 @@
+generated: '2026-09-19'
+method: derived
+format: custom-json-envelope
+description: 'Error catalog derived from the two published OpenAPIs (4xx/5xx responses declared per operation) and
+  from the errors block the provider publishes in /.well-known/agent.json, which is the only place the envelope
+  schema is written down. Confirmed live: an unpaid POST /x402/ping returns 402 {x402Version: 2, error: "X-PAYMENT
+  header is required", trial_access: {...}, agent_instructions: {...}} plus PAYMENT-REQUIRED, X-Payment-Price, X-Trial-Access
+  and Link rel=agent-instructions headers - the 402 is a self-describing onboarding document, not just a refusal.'
+envelope:
+  shape: '{error: string, code: string, ...}'
+  request_id_field: requestId (on SERVICE_ERROR only)
+  retry_field: retryAfter seconds (on RATE_LIMIT_EXCEEDED)
+  payment_fields:
+  - price_usd
+  - payment_address
+  - network
+  - currency
+  content_type: application/json
+problems:
+- status: 402
+  code: PAYMENT_REQUIRED
+  title: PaymentRequired
+  description: x402 payment required to access this service
+  fields:
+  - code
+  - currency
+  - error
+  - network
+  - payment_address
+  - price_usd
+  required:
+  - error
+  - code
+  - price_usd
+  - payment_address
+  - network
+  - currency
+  source: https://coinrailz.com/.well-known/agent.json#errors
+- status: 400
+  code: INVALID_REQUEST
+  title: InvalidRequest
+  description: Request validation failed
+  fields:
+  - code
+  - details
+  - error
+  required:
+  - error
+  - code
+  source: https://coinrailz.com/.well-known/agent.json#errors
+- status: 500
+  code: SERVICE_ERROR
+  title: ServiceError
+  description: Internal service error
+  fields:
+  - code
+  - error
+  - requestId
+  required:
+  - error
+  - code
+  source: https://coinrailz.com/.well-known/agent.json#errors
+- status: 429
+  code: RATE_LIMIT_EXCEEDED
+  title: RateLimitExceeded
+  description: Rate limit exceeded
+  fields:
+  - code
+  - error
+  - retryAfter
+  required:
+  - error
+  - code
+  - retryAfter
+  source: https://coinrailz.com/.well-known/agent.json#errors
+declared_status_codes:
+- status: 400
+  operations_declaring: 8
+  descriptions:
+  - Invalid amountUsd
+  - Invalid input (bad address, non-positive shares)
+  - Invalid input (bad address, non-positive shares, or on-chain data unavailable)
+  - Invalid input or live quote unavailable
+  example_operations:
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#createCheckoutSession
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#confirmSolanaDeposit
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#vltUsdcDeposit
+- status: 401
+  operations_declaring: 1
+  descriptions:
+  - token query param missing
+  example_operations:
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#getCheckoutStatus
+- status: 402
+  operations_declaring: 159
+  descriptions:
+  - MPP payment challenge
+  - 'MPP payment challenge (WWW-Authenticate: Payment)'
+  - Payment Required
+  - Payment Required - x402 challenge returned
+  example_operations:
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#first-call
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#mppPing
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#mppFirstCall
+- status: 403
+  operations_declaring: 3
+  descriptions:
+  - Internal IP — trial reserved for external agents
+  - Invalid token
+  - Wallet is not a signer in the provided transaction
+  example_operations:
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#getTrialKey
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#getCheckoutStatus
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#confirmSolanaDeposit
+- status: 409
+  operations_declaring: 1
+  descriptions:
+  - Duplicate idempotency_key — a pending intent already exists for this wallet/amount/key
+  example_operations:
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#buildSolanaDepositTx
+- status: 429
+  operations_declaring: 1
+  descriptions:
+  - Trial already claimed from this IP — upgrade to paid credits
+  example_operations:
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#getTrialKey
+- status: 500
+  operations_declaring: 2
+  descriptions:
+  - Bridge failed (e.g. treasury balance insufficient)
+  example_operations:
+  - openapi/coinrailz-com-agent-payment-api-openapi.yml#rhBridgeUsdc
+  - openapi/coinrailz-com-x402-services-openapi.yml#rhBridgeUsdc
+observed:
+- status: 402
+  url: https://coinrailz.com/x402/ping
+  method: POST
+  body_keys:
+  - x402Version
+  - error
+  - trial_access
+  - agent_instructions
+  headers:
+  - payment-required
+  - x-payment-price
+  - x-payment-network
+  - x-payment-recipe-url
+  - x-trial-access
+  - x-agent-instructions
+  - link
+  - ratelimit-limit
+  - ratelimit-policy
+  - ratelimit-remaining
+  - ratelimit-reset
+  fetched: '2026-09-19'
+- status: 405
+  url: https://coinrailz.com/mcp
+  method: GET
+  body: '{"jsonrpc":"2.0","id":null,"error":{"code":-32600,"message":"MCP transport only supports POST requests
+    at /mcp"}}'
+- status: 404
+  url: https://coinrailz.com/.well-known/security.txt
+  method: GET
+  body_keys:
+  - error
+  - message
+  - knownPaths

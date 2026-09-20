@@ -1,0 +1,141 @@
+generated: '2026-09-19'
+method: searched
+source: openapi/ (both specs), https://coinrailz.com/api/auth/capabilities, /.well-known/agent-instructions.json,
+  /.well-known/agent.json rateLimits + errors, /.well-known/agent-registration.json, /api/yield/manifest, and live
+  response headers from POST /x402/ping (2026-09-19).
+authentication:
+  style: api-key-or-payment
+  schemes:
+  - name: apiKey
+    header: X-API-KEY
+    prefix: cr_live_
+  - name: bearerApiKey
+    header: 'Authorization: Bearer <cr_live_key>'
+  - name: x402
+    header: X-PAYMENT (also PAYMENT-SIGNATURE)
+    note: base64url signed payment payload answering the 402 challenge
+  - name: mpp
+    header: 'Authorization: Payment <base64-credential>'
+  public_operations:
+  - getAuthCapabilities
+  - getTrialKey
+  - createCheckoutSession
+  - getCheckoutStatus
+  - getMppCatalog
+  - getMppManifest
+  - getX402Manifest
+  - getAgentInstructions
+  - getYieldManifest
+  - getYieldRates
+  - getYieldStats
+  - getDepositTx
+  - getRedeemTx
+  - getYieldPosition
+  - getYieldContract
+  - getSolanaYieldManifest
+  - getSolanaYieldRates
+  - getSolanaYieldStats
+  - buildSolanaDepositTx
+  - confirmSolanaDeposit
+  - getSolanaYieldPosition
+  see: authentication/coinrailz-com-authentication.yml
+idempotency:
+  coverage: partial
+  mechanism: request-body key, not a header
+  scope:
+  - buildSolanaDepositTx
+  - purchaseCredits (POST /api/m2m/credits/purchase - documented in agent-instructions.json, not in the OpenAPI)
+  - agent registration (POST /.well-known/agent-registration.json - keyed on walletAddress)
+  details:
+  - operation: buildSolanaDepositTx
+    field: idempotency_key
+    required: false
+    window: 120s
+    duplicate_response: 409 Duplicate idempotency_key - a pending intent already exists for this wallet/amount/key
+    source: openapi/coinrailz-com-agent-payment-api-openapi.yml#buildSolanaDepositTx
+  - operation: purchaseCredits
+    field: idempotencyKey
+    required: true
+    note: '"Unique string per purchase (min 8 chars, UUID v4 recommended). Reuse safely on network retry."'
+    source: https://coinrailz.com/.well-known/agent-instructions.json#quickStart.paths.cardPayment
+  - operation: agent registration
+    field: walletAddress
+    note: 'agent-registration.json declares idempotencyKey: walletAddress'
+  note: The 80 metered /x402/* services and the checkout-session flow document no replay protection; an x402 retry
+    with a fresh signed payment is a second charge. 3 of ~90 write surfaces are covered - partial.
+pagination:
+  style: none
+  note: Every service is a single-shot POST returning a bounded document; no cursor/offset parameters in either
+    spec.
+field_expansion: null
+sparse_fields: null
+metadata: null
+request_tracing:
+  response_header: x-cloud-trace-context (Google Frontend)
+  body_field: requestId on SERVICE_ERROR (500) responses
+  request_header: null
+versioning:
+  style: none-in-path
+  see: lifecycle/coinrailz-com-lifecycle.yml
+error_envelope:
+  shape: '{error, code, ...}'
+  see: errors/coinrailz-com-problem-types.yml
+rate_limit_signaling:
+  headers:
+  - ratelimit-limit
+  - ratelimit-policy
+  - ratelimit-remaining
+  - ratelimit-reset
+  exhaustion_status: 429
+  exhaustion_code: RATE_LIMIT_EXCEEDED
+  retry_field: retryAfter (seconds, body)
+  billing_headers:
+  - X-Credits-Used
+  - X-Credits-Remaining
+  - X-Recharge-Url
+  - X-Payment-Price
+  - X-Payment-Network
+  see: rate-limits/coinrailz-com-rate-limits.yml
+agent_hints:
+  link_header: 'Link: <https://coinrailz.com/.well-known/agent-instructions.json>; rel="agent-instructions"'
+  x_agent_instructions: true
+  x_payment_recipe_url: https://coinrailz.com/x402/recipes/<service>
+  x_trial_access: https://coinrailz.com/api/m2m/credits/trial
+dry_run_mode:
+  status: partial
+  note: transaction-builder and the yield deposit-tx / redeem-tx operations return UNSIGNED calldata the agent signs
+    and submits itself (non-custodial "builder pattern"), so on-chain actions can be inspected before execution;
+    the metered data services have no dry-run flag.
+reversibility:
+  grade: documented
+  write_surfaces:
+  - surface: x402 per-call payments (80 /x402/* services)
+    reversal: null
+    window: null
+    note: 'On-chain USDC settlement via the CDP facilitator; no refund, void or cancel operation is documented anywhere
+      on the surface probed (grep of both specs and agent-instructions for refund/cancel/reverse: none).'
+  - surface: Prepaid credits (createCheckoutSession / purchaseCredits)
+    reversal: null
+    window: null
+    note: No refund policy published on a machine-readable surface; /terms-of-service is a client-rendered SPA route
+      whose text could not be read by this pass.
+  - surface: USDC yield vault deposit (getDepositTx / vlt-usdc-deposit)
+    reversal: getRedeemTx / vlt-usdc-withdraw / vlt-usdc-zap-withdraw
+    window: no lockup
+    window_source: https://coinrailz.com/api/yield/manifest ("No lockup. Near-instant redemption"; fees.exit 0%)
+    note: A reversal path exists and the manifest states there is no lockup, but no bounded window is stated, so
+      this grades documented rather than verified.
+  - surface: Solana yield deposit (buildSolanaDepositTx / confirmSolanaDeposit)
+    reversal: redeem_hint in getSolanaYieldPosition
+    window: null
+    note: Position response includes a ready-to-sign withdraw tx; no window stated.
+  - surface: Agent registration
+    reversal: null
+    window: null
+  note: 'Grade is documented (0.4): reversal operations exist for the vault surfaces with a stated "no lockup",
+    but no window is stated and the payment surfaces are irreversible by construction.'
+cross_links:
+  errors: errors/coinrailz-com-problem-types.yml
+  lifecycle: lifecycle/coinrailz-com-lifecycle.yml
+  authentication: authentication/coinrailz-com-authentication.yml
+  rate_limits: rate-limits/coinrailz-com-rate-limits.yml

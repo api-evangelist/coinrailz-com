@@ -1,0 +1,15 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Coin Railz Agent Payment API
+  version: 1.0.0
+  x-generated: '2026-09-19'
+  x-method: generated
+extends: openapi/coinrailz-com-agent-payment-api-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-source: https://coinrailz.com/openapi.json
+    x-apievangelist-fetched: '2026-09-19'
+    x-apievangelist-provider: coinrailz-com
+    x-apievangelist-mcp: https://coinrailz.com/mcp
+    x-apievangelist-agent-card: https://coinrailz.com/.well-known/agent-card.json

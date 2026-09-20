@@ -1,0 +1,81 @@
+generated: '2026-09-19'
+method: probed
+description: Cross-cutting and domain standards asserted from the published contracts and from live unauthenticated
+  responses. Nothing here is a certification; no compliance programme (SOC 2, ISO 27001, PCI) is published anywhere
+  on the surface probed, so no Compliance pointer is emitted.
+standards:
+- id: x402
+  conforms: true
+  evidence: 'POST https://coinrailz.com/x402/ping (no payment) returned HTTP 402 with a base64 PAYMENT-REQUIRED
+    header decoding to {x402Version: 2, accepts: [...]} naming scheme exact, network eip155:8453, asset USDC 0x8335...2913,
+    payTo, maxTimeoutSeconds; /.well-known/x402.json declares specVersion 2.12.0, facilitator https://api.cdp.coinbase.com/platform/v2/x402.'
+  domain: agent payments
+- id: a2a-0.3.0
+  conforms: true
+  evidence: /.well-known/agent-card.json protocolVersion 0.3.0, capabilities object, skills array (80); /a2a/v1
+    answers JSON-RPC. Graded conformant in a2a/coinrailz-com-a2a.yml.
+- id: mcp
+  conforms: true
+  evidence: POST https://coinrailz.com/mcp {"method":"tools/list"} returned jsonrpc 2.0 result.tools[80] each with
+    inputSchema/outputSchema.
+- id: mpp
+  conforms: true
+  evidence: 'openapi securitySchemes.mpp {type: http, scheme: payment}; /.well-known/mpp.json and /mpp/catalog (HTTP
+    200) publish the Machine Payments Protocol challenge/credential scheme (WWW-Authenticate: Payment / Authorization:
+    Payment).'
+  note: Claimed by the provider and shaped correctly; MPP settlement on Tempo was not exercised.
+- id: ap2
+  conforms: null
+  evidence: agent-card-extended.json declares an AP2 v0.1 merchant endpoint https://coinrailz.com/ap2/v1/merchant;
+    not probed (would require a PaymentMandate).
+- id: caip-2
+  conforms: true
+  evidence: payableNetworks / dataQueryNetworks in /.well-known/api-catalog and payment-methods.json use CAIP-2
+    chain ids (eip155:8453, eip155:5042, solana:5eykt4Us...).
+  domain: blockchain
+- id: erc-4626
+  conforms: true
+  evidence: /api/yield/manifest declares vault standard ERC-4626 (vault 0xb769...6736, share token crUSDC) on Base;
+    getYieldContract operation serves the ABI.
+  domain: DeFi
+- id: eip-712
+  conforms: true
+  evidence: 402 challenge accepts[].extra carries EIP-712 domain data (name USD Coin, version 2, chainId 8453) for
+    the transferWithAuthorization signature the x402 exact scheme requires.
+  domain: blockchain
+- id: ietf-ratelimit-headers
+  conforms: true
+  evidence: 'Live response headers ratelimit-limit: 200, ratelimit-policy: 200;w=60, ratelimit-remaining, ratelimit-reset
+    on POST /x402/ping (draft-ietf-httpapi-ratelimit-headers field names).'
+- id: rfc8615-well-known
+  conforms: true
+  evidence: 30 named /.well-known/ documents served as application/json with a JSON 404 listing knownPaths for anything
+    else.
+- id: openapi-3.1
+  conforms: true
+  evidence: https://coinrailz.com/openapi.json parses as OpenAPI 3.1.0, 106 operations, all with operationId; https://coinrailz.com/openapi-x402-services.json
+    is OpenAPI 3.0.3, 80 operations.
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 securityScheme; /.well-known/oauth-authorization-server and oauth-protected-resource 404.
+    Auth is API key (X-API-KEY / Bearer) or payment headers.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration 404.
+- id: rfc9728-protected-resource
+  conforms: false
+  evidence: /.well-known/oauth-protected-resource 404 on coinrailz.com and on the gateway host.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors are a custom {error, code, ...} JSON envelope (agent.json errors block; live 402 body); no application/problem+json.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt 404; /security.txt is the SPA shell. A security contact exists only as securityContact
+    mailto:security@coinrailz.com in /.well-known/agent.json.
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog answers 200 application/json but is a provider-specific catalog object, not
+    an application/linkset+json document.
+- id: idempotency-key-header
+  conforms: false
+  evidence: No Idempotency-Key header; idempotency is a body field on two operations only (see conventions/).

@@ -1,0 +1,72 @@
+# Coin Railz — LLM Discovery File
+# https://coinrailz.com/llms.txt
+# Last updated: 2026-09-16
+
+## What is Coin Railz?
+
+Coin Railz is agentic commerce infrastructure — pay-per-call APIs built for autonomous AI agents.
+Agents pay per call using x402 (HTTP-native USDC micropayments) or card-funded API keys.
+No subscriptions. No OAuth. No human in the loop.
+
+## Core Capabilities
+
+- **Canonical service catalog** spanning DeFi, IoT, satellite data, prediction markets, RWA tokenization, and compliance
+- **x402 protocol** — 80 canonical services return a live HTTP 402 challenge; agents select its exact `accepts` entry, sign it, and retry with `PAYMENT-SIGNATURE` or `X-PAYMENT`
+- **API key access** — card-funded credits, instant provisioning (~60 seconds)
+- **USDC Yield Vault** — ERC-4626 on Base, auto-routes across Aave v3, Compound v3, and Morpho Blue
+- **A2A payments** — agent-to-agent settlement at /a2a endpoint (A2A protocol 0.3.0)
+- **MCP server** — full MCP tool manifest at /mcp
+
+## Pricing
+
+- Service prices are returned by the live HTTP 402 challenge and the canonical catalog
+- No fixed protocol minimum or documented withdrawal minimum is claimed
+- Full price list: https://coinrailz.com/x402
+
+## Machine-Readable Endpoints
+
+- **Service catalog (x402):** https://coinrailz.com/x402 (GET — canonical service list and pricing)
+- **A2A agent card:** https://coinrailz.com/.well-known/agent.json
+- **MCP manifest:** https://coinrailz.com/mcp
+- **OpenAPI spec:** https://coinrailz.com/api/openapi.json
+- **AWI manifest:** https://coinrailz.com/.well-known/awi.json
+- **x402 discovery:** https://coinrailz.com/x402/discovery
+- **Sitemap:** https://coinrailz.com/sitemap.xml
+
+## Cloudflare Agent Gateway
+
+Coin Railz is also accessible via a native Cloudflare Worker gateway — the preferred entry point for agents built on Cloudflare's Agent SDK or using Cloudflare Wallets.
+
+- **Gateway root:** https://coinrailz-x402-gateway.coinrailz.workers.dev
+- **Service catalog:** https://coinrailz-x402-gateway.coinrailz.workers.dev/catalog
+- **Payment:** CF Wallet agents pay via the Coinbase CDP facilitator (same as the main platform)
+- **Coverage:** Dynamically sourced from the canonical service catalog
+
+## SDK / Integration
+
+- **NPM (TypeScript/JS):** @coinrailz/agent-payments
+- **ElizaOS plugin:** elizaos-plugin-coinrailz (npm)
+- **Python:** coinrailz (PyPI)
+- **Docker:** tdnupe3/agent-payments
+- **AgentKit actions:** 6 built-in actions for yield deposits/withdrawals
+
+## Service Categories
+
+DeFi: token prices, DEX quotes, gas oracle, wallet risk, approval manager, yield comparisons, RWA NAV oracle
+IoT: device payments, telemetry, sensor data
+Satellite / Earth data: NASA Earthdata ocean color, fire alerts, weather imagery, SRTM elevation, NDVI
+Prediction markets: Kalshi political, Kalshi sports, Polymarket
+Compliance: KYC checks, smart contract audit, payment processing compliance, AML screening
+Stock / Forex: RH stock price, stock sentiment, forex sentiment
+Blockchain: token metadata, bridge USDC (Across protocol), B20 token info/transfer/compliance
+
+## Supported Payment Networks
+
+Base remains available. Arc Mainnet is available through Circle Gateway at `eip155:5042` with USDC `0x3600000000000000000000000000000000000000`; Gateway verifier `0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE`; facilitator `https://gateway-api.circle.com`. Agents must use the exact `accepts` entry from a live HTTP 402 challenge rather than hardcoding payment details.
+
+## Contact / Links
+
+- Website: https://coinrailz.com
+- Twitter/X: @coinrailz
+- NPM org: https://www.npmjs.com/org/coinrailz
+- Operator: Kellogg Holdings LLC

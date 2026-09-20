@@ -1,0 +1,74 @@
+generated: '2026-09-19'
+method: probed
+source: https://coinrailz.com/.well-known/agent-card.json
+description: 'A2A Agent Card observed at the canonical /.well-known/agent-card.json on coinrailz.com (HTTP 200,
+  application/json). Graded against the A2A 1.0.0 AgentCard object: capabilities is an object, protocolVersion 0.3.0
+  is present, skills is an array of 80 entries, preferredTransport and default input/output modes are declared -
+  conformant. The A2A endpoint https://coinrailz.com/a2a/v1 answers JSON-RPC (an unknown method returns -32601,
+  proof of a live JSON-RPC handler). Provider-published by construction; nothing here is derived or generated. The
+  legacy /.well-known/agent.json also answers 200 but is a DIFFERENT document (an x402 manifest-flavoured card with
+  66 skills, no capabilities object of A2A shape) and is saved alongside for the record, not graded. Three per-service
+  sub-agent cards under /agent/<name>/.well-known/agent-card.json are flavored (capabilities is an array, no protocolVersion,
+  no skills).'
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: coinrailz.com
+conformance:
+  spec: A2A 1.0.0
+  grade: conformant
+  protocol_version: 0.3.0
+  preferred_transport: JSONRPC
+  deviations: []
+card:
+  name: Coin Railz
+  description: Multi-chain x402 micropayment infrastructure for AI agents with 80 pay-per-call services.
+  url: https://coinrailz.com/a2a/v1
+  version: 1.1.0
+  documentation_url: https://coinrailz.com/.well-known/agent-instructions.json
+  provider: Coin Railz
+  skills: 80
+  file: coinrailz-com-agent-card.json
+  capabilities:
+    streaming: false
+    pushNotifications: false
+    stateTransitionHistory: false
+  supports_authenticated_extended_card: false
+endpoint_probe:
+  url: https://coinrailz.com/a2a/v1
+  get_status: 200
+  jsonrpc_post_status: 200
+  note: 'GET returns a discovery summary (skillCount 80, interactionEndpoint /a2a/v1/message/send); POST agent/getAuthenticatedExtendedCard
+    returns JSON-RPC error -32601 Method not found, consistent with supportsAuthenticatedExtendedCard: false.'
+related_cards:
+- path: /.well-known/agent.json
+  status: 200
+  file: coinrailz-com-agent-legacy.json
+  note: Legacy pre-0.3 path; different body (x402ManifestVersion x402-2.12, 66 skills, securityContact mailto:security@coinrailz.com,
+    rateLimits 60/min 1000/hr burst 10). Not the graded card.
+- path: /.well-known/agent-card-extended.json
+  status: 200
+  file: coinrailz-com-agent-card-extended.json
+  note: 'Extended card: 77 skills, AP2 v0.1 merchant endpoint, MPP block, agenticWallet block, Cloudflare gateway.'
+- path: /agent/compliance-consultant/.well-known/agent-card.json
+  status: 200
+  grade: flavored
+  note: capabilities is an array; no protocolVersion; no skills array. Not saved.
+- path: /agent/payment-processor/.well-known/agent-card.json
+  status: 200
+  grade: flavored
+  note: same shape as above. Not saved.
+- path: /agent/smart-contract-auditor/.well-known/agent-card.json
+  status: 200
+  grade: flavored
+  note: same shape as above. Not saved.
+- path: https://coinrailz-x402-gateway.coinrailz.workers.dev/.well-known/agent-card.json
+  status: 404
+  note: The Cloudflare gateway host serves no card.
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://coinrailz.com/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json; charset=utf-8
+  bytes: 40779
+  note: Verbatim body saved alongside this manifest. No field inferred.

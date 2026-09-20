@@ -1,0 +1,202 @@
+generated: '2026-09-19'
+method: searched
+description: 'Results of probing the /.well-known/ discovery surface on every host the record knows: the registrable
+  domain coinrailz.com (also the only OpenAPI servers[] host, the A2A host and the MCP host - /mcp is served from
+  the primary domain, there is no mcp.coinrailz.com), www.coinrailz.com (no DNS record), and the Cloudflare Worker
+  gateway named in llms.txt and the extended agent card. coinrailz.com is an SPA whose catch-all answers 200 text/html
+  (14128 bytes) for every unknown path, so only distinct application/json bodies were accepted; genuine misses return
+  a JSON 404 that lists the platform''s knownPaths. Rows marked extra: true are provider-specific discovery documents
+  beyond the closed canonical list, saved because they are real and self-describing.'
+hosts:
+- host: https://coinrailz.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    note: JSON 404 body listing the platform's knownPaths; no security.txt at the well-known path or at /security.txt
+      (SPA shell).
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    note: No RFC 9728 metadata; the MCP endpoint is unauthenticated, tools/list answered anonymously.
+  - path: /.well-known/api-catalog
+    status: 200
+    type: application/json
+    file: coinrailz-com-api-catalog.json
+    note: Provider catalog document (catalog_version 1.1.0, openapi link, 80 services, discovery block). Not RFC
+      9727 linkset-shaped but a real JSON catalog.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-ai-plugin.json
+    note: schema_version v1, api.type openapi -> https://coinrailz.com/openapi.json
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 200
+    type: text/html
+    note: SPA catch-all shell (14128 bytes, same as every unknown path). Not an APIs.json; not saved.
+  - path: /apis.yml
+    status: 200
+    type: text/html
+    note: SPA catch-all shell. Not saved.
+  - path: /.well-known/agent-card.json
+    status: 200
+    type: application/json
+    file: ../a2a/coinrailz-com-agent-card.json
+    note: A2A card - see a2a/.
+    extra: true
+  - path: /.well-known/agent.json
+    status: 200
+    type: application/json
+    file: ../a2a/coinrailz-com-agent-legacy.json
+    note: Legacy A2A path, different body - see a2a/.
+    extra: true
+  - path: /.well-known/mcp.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-mcp.json
+    note: 'MCP discovery: endpoints tools_list/tools_call/services.'
+    extra: true
+  - path: /.well-known/mcp-server.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-mcp-server.json
+    extra: true
+  - path: /.well-known/server-card.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-server-card.json
+    note: MCP server card with 80 tools, transport/auth/payment blocks.
+    extra: true
+  - path: /.well-known/x402.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-x402.json
+    note: 'x402 manifest v2.12: facilitator api.cdp.coinbase.com, payTo, quickstart, networks.'
+    extra: true
+  - path: /.well-known/pricing.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-pricing.json
+    note: Per-service USDC prices by category (updated 2026-09-19).
+    extra: true
+  - path: /.well-known/payment-methods.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-payment-methods.json
+    extra: true
+  - path: /.well-known/agent-instructions.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-agent-instructions.json
+    note: '"How to Do Business with Coin Railz" - onboarding, payment paths, pricing tiers, troubleshooting.'
+    extra: true
+  - path: /.well-known/agent-registration.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-agent-registration.json
+    note: Registration schema (POST same path; idempotencyKey walletAddress; 10 registrations/IP/min).
+    extra: true
+  - path: /.well-known/mcp-integration.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-mcp-integration.json
+    extra: true
+  - path: /.well-known/webmcp.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-webmcp.json
+    extra: true
+  - path: /.well-known/awi.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-awi.json
+    extra: true
+  - path: /.well-known/mpp.json
+    status: 200
+    type: application/json
+    file: coinrailz-com-mpp.json
+    note: Machine Payments Protocol manifest.
+    extra: true
+  - path: /.well-known/agent-card-extended.json
+    status: 200
+    type: application/json
+    file: ../a2a/coinrailz-com-agent-card-extended.json
+    extra: true
+  - path: /.well-known/agent-directory.json
+    status: 200
+    type: application/json
+    note: OASF agent-directory listing one agent; not saved.
+    extra: true
+  - path: /.well-known/service-manifest.json
+    status: 200
+    type: application/json
+    note: 31 KB service manifest; superset of x402-services.json; not saved.
+    extra: true
+  - path: /.well-known/x402-services.json
+    status: 200
+    type: application/json
+    note: 44 KB; the same 80 services as openapi-x402-services.json; not saved.
+    extra: true
+  - path: /llms.txt
+    status: 200
+    type: text/plain
+    file: ../llms/coinrailz-com-llms.txt
+    extra: true
+- host: https://www.coinrailz.com
+  note: DNS does not resolve (curl exit 6); nothing probed.
+  documents:
+  - path: /.well-known/security.txt
+    status: 0
+    note: no DNS
+  - path: /.well-known/openid-configuration
+    status: 0
+    note: no DNS
+  - path: /.well-known/oauth-authorization-server
+    status: 0
+    note: no DNS
+  - path: /.well-known/api-catalog
+    status: 0
+    note: no DNS
+  - path: /.well-known/ai-plugin.json
+    status: 0
+    note: no DNS
+  - path: /.well-known/apis.json
+    status: 0
+    note: no DNS
+  - path: /apis.json
+    status: 0
+    note: no DNS
+- host: https://coinrailz-x402-gateway.coinrailz.workers.dev
+  note: Cloudflare Worker gateway (status healthy, gateway version 2.12.0, upstream https://coinrailz.com). Serves
+    / and /catalog only.
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404

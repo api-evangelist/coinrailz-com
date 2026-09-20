@@ -1,0 +1,687 @@
+generated: '2026-09-19'
+method: derived
+source: Derived by binding the 80 tools returned live by POST https://coinrailz.com/mcp tools/list to the operationIds
+  in openapi/coinrailz-com-x402-services-openapi.yml (80 /x402/<service> operations) and openapi/coinrailz-com-agent-payment-api-openapi.yml
+  (106 operations). Tool names are coinrailz_<service_id_with_underscores>; the binding is mechanical (underscore
+  -> hyphen -> /x402/<id>) and every match was checked against the spec.
+purpose: Bind each MCP tool to its backing REST operation so the tool inherits the operation's requestBody as its
+  real input contract; record the operations the MCP surface does not expose (onboarding/credits, MPP, yield vault,
+  Solana yield, manifests).
+surfaces:
+  rest_openapi: openapi/ (two specs; sources in openapi/_original/)
+  mcp: https://coinrailz.com/mcp (tools/list open; tools/call metered)
+  graphql: null
+crosswalk:
+- tool: coinrailz_ping
+  category: Discovery
+  service: ping
+  rest:
+  - ping
+  binding: rest
+  confidence: high
+- tool: coinrailz_first_call
+  category: Discovery
+  service: first-call
+  rest:
+  - first-call
+  binding: rest
+  confidence: high
+- tool: coinrailz_iot_sensor_reading
+  category: IoT & DePIN
+  service: iot-sensor-reading
+  rest:
+  - iotSensorReading
+  binding: rest
+  confidence: high
+- tool: coinrailz_ai_inference
+  category: AI Services
+  service: ai-inference
+  rest:
+  - aiInference
+  binding: rest
+  confidence: high
+- tool: coinrailz_gas_price_oracle
+  category: Trading Intelligence
+  service: gas-price-oracle
+  rest:
+  - gasPriceOracle
+  binding: rest
+  confidence: high
+- tool: coinrailz_weather_station_data
+  category: IoT & DePIN
+  service: weather-station-data
+  rest:
+  - weatherStationData
+  binding: rest
+  confidence: high
+- tool: coinrailz_fleet_telematics
+  category: IoT & DePIN
+  service: fleet-telematics
+  rest:
+  - fleetTelematics
+  binding: rest
+  confidence: high
+- tool: coinrailz_iot_device_stream
+  category: IoT & DePIN
+  service: iot-device-stream
+  rest:
+  - iotDeviceStream
+  binding: rest
+  confidence: high
+- tool: coinrailz_iot_bulk_data
+  category: IoT & DePIN
+  service: iot-bulk-data
+  rest:
+  - iotBulkData
+  binding: rest
+  confidence: high
+- tool: coinrailz_solana_yield_finder
+  category: Trading Intelligence
+  service: solana-yield-finder
+  rest:
+  - solanaYieldFinder
+  binding: rest
+  confidence: high
+- tool: coinrailz_token_metadata
+  category: Trading Intelligence
+  service: token-metadata
+  rest:
+  - tokenMetadata
+  binding: rest
+  confidence: high
+- tool: coinrailz_dex_liquidity
+  category: Trading Intelligence
+  service: dex-liquidity
+  rest:
+  - dexLiquidity
+  binding: rest
+  confidence: high
+- tool: coinrailz_approval_manager
+  category: Trading Intelligence
+  service: approval-manager
+  rest:
+  - approvalManager
+  binding: rest
+  confidence: high
+- tool: coinrailz_token_price
+  category: Trading Intelligence
+  service: token-price
+  rest:
+  - tokenPrice
+  binding: rest
+  confidence: high
+- tool: coinrailz_token_sentiment
+  category: Trading Intelligence
+  service: token-sentiment
+  rest:
+  - tokenSentiment
+  binding: rest
+  confidence: high
+- tool: coinrailz_whale_alerts
+  category: Trading Intelligence
+  service: whale-alerts
+  rest:
+  - whaleAlerts
+  binding: rest
+  confidence: high
+- tool: coinrailz_batch_quote
+  category: Trading Intelligence
+  service: batch-quote
+  rest:
+  - batchQuote
+  binding: rest
+  confidence: high
+- tool: coinrailz_multi_chain_balance
+  category: Trading Intelligence
+  service: multi-chain-balance
+  rest:
+  - multiChainBalance
+  binding: rest
+  confidence: high
+- tool: coinrailz_trending_tokens
+  category: Trading Intelligence
+  service: trending-tokens
+  rest:
+  - trendingTokens
+  binding: rest
+  confidence: high
+- tool: coinrailz_portfolio_tracker
+  category: Trading Intelligence
+  service: portfolio-tracker
+  rest:
+  - portfolioTracker
+  binding: rest
+  confidence: high
+- tool: coinrailz_wallet_risk
+  category: Trading Intelligence
+  service: wallet-risk
+  rest:
+  - walletRisk
+  binding: rest
+  confidence: high
+- tool: coinrailz_fire_alerts
+  category: Satellite Intelligence
+  service: fire-alerts
+  rest:
+  - fireAlerts
+  binding: rest
+  confidence: high
+- tool: coinrailz_weather_imagery
+  category: Satellite Intelligence
+  service: weather-imagery
+  rest:
+  - weatherImagery
+  binding: rest
+  confidence: high
+- tool: coinrailz_air_quality
+  category: Satellite Intelligence
+  service: air-quality
+  rest:
+  - airQuality
+  binding: rest
+  confidence: high
+- tool: coinrailz_vegetation
+  category: Satellite Intelligence
+  service: vegetation
+  rest:
+  - vegetation
+  binding: rest
+  confidence: high
+- tool: coinrailz_flood_detection
+  category: Satellite Intelligence
+  service: flood-detection
+  rest:
+  - floodDetection
+  binding: rest
+  confidence: high
+- tool: coinrailz_land_use
+  category: Satellite Intelligence
+  service: land-use
+  rest:
+  - landUse
+  binding: rest
+  confidence: high
+- tool: coinrailz_satellite_earthdata
+  category: Satellite Intelligence
+  service: satellite-earthdata
+  rest:
+  - satelliteEarthdata
+  binding: rest
+  confidence: high
+- tool: coinrailz_earthdata_granules
+  category: Satellite Intelligence
+  service: earthdata-granules
+  rest:
+  - earthdataGranules
+  binding: rest
+  confidence: high
+- tool: coinrailz_earthdata_precipitation
+  category: Satellite Intelligence
+  service: earthdata-precipitation
+  rest:
+  - earthdataPrecipitation
+  binding: rest
+  confidence: high
+- tool: coinrailz_earthdata_sst
+  category: Satellite Intelligence
+  service: earthdata-sst
+  rest:
+  - earthdataSst
+  binding: rest
+  confidence: high
+- tool: coinrailz_earthdata_soil_moisture
+  category: Satellite Intelligence
+  service: earthdata-soil-moisture
+  rest:
+  - earthdataSoilMoisture
+  binding: rest
+  confidence: high
+- tool: coinrailz_earthdata_ocean_color
+  category: Satellite Intelligence
+  service: earthdata-ocean-color
+  rest:
+  - earthdataOceanColor
+  binding: rest
+  confidence: high
+- tool: coinrailz_b20_token_info
+  category: Base Native
+  service: b20-token-info
+  rest:
+  - b20TokenInfo
+  binding: rest
+  confidence: high
+- tool: coinrailz_b20_transfer_check
+  category: Base Native
+  service: b20-transfer-check
+  rest:
+  - b20TransferCheck
+  binding: rest
+  confidence: high
+- tool: coinrailz_b20_compliance_scan
+  category: Base Native
+  service: b20-compliance-scan
+  rest:
+  - b20ComplianceScan
+  binding: rest
+  confidence: high
+- tool: coinrailz_vlt_usdc_deposit
+  category: DeFi & Yield
+  service: vlt-usdc-deposit
+  rest:
+  - vltUsdcDeposit
+  binding: rest
+  confidence: high
+- tool: coinrailz_vlt_usdc_withdraw
+  category: DeFi & Yield
+  service: vlt-usdc-withdraw
+  rest:
+  - vltUsdcWithdraw
+  binding: rest
+  confidence: high
+- tool: coinrailz_vlt_usdc_zap_withdraw
+  category: DeFi & Yield
+  service: vlt-usdc-zap-withdraw
+  rest:
+  - vltUsdcZapWithdraw
+  binding: rest
+  confidence: high
+- tool: coinrailz_vlt_stats
+  category: DeFi & Yield
+  service: vlt-stats
+  rest:
+  - vltStats
+  binding: rest
+  confidence: high
+- tool: coinrailz_polymarket_events
+  category: Prediction Markets
+  service: polymarket-events
+  rest:
+  - polymarketEvents
+  binding: rest
+  confidence: high
+- tool: coinrailz_polymarket_search
+  category: Prediction Markets
+  service: polymarket-search
+  rest:
+  - polymarketSearch
+  binding: rest
+  confidence: high
+- tool: coinrailz_kalshi_markets
+  category: Prediction Markets
+  service: kalshi-markets
+  rest:
+  - kalshiMarkets
+  binding: rest
+  confidence: high
+- tool: coinrailz_kalshi_search
+  category: Prediction Markets
+  service: kalshi-search
+  rest:
+  - kalshiSearch
+  binding: rest
+  confidence: high
+- tool: coinrailz_prediction_market_spread
+  category: Prediction Markets
+  service: prediction-market-spread
+  rest:
+  - predictionMarketSpread
+  binding: rest
+  confidence: high
+- tool: coinrailz_polymarket_odds
+  category: Prediction Markets
+  service: polymarket-odds
+  rest:
+  - polymarketOdds
+  binding: rest
+  confidence: high
+- tool: coinrailz_prediction_market_odds
+  category: Prediction Markets
+  service: prediction-market-odds
+  rest:
+  - predictionMarketOdds
+  binding: rest
+  confidence: high
+- tool: coinrailz_kalshi_odds
+  category: Prediction Markets
+  service: kalshi-odds
+  rest:
+  - kalshiOdds
+  binding: rest
+  confidence: high
+- tool: coinrailz_transaction_builder
+  category: Execution
+  service: transaction-builder
+  rest:
+  - transactionBuilder
+  binding: rest
+  confidence: high
+- tool: coinrailz_payment_processing
+  category: Execution
+  service: payment-processing
+  rest:
+  - paymentProcessing
+  binding: rest
+  confidence: high
+- tool: coinrailz_contract_scan
+  category: Execution
+  service: contract-scan
+  rest:
+  - contractScan
+  binding: rest
+  confidence: high
+- tool: coinrailz_instant_agent_wallet
+  category: Execution
+  service: instant-agent-wallet
+  rest:
+  - instantAgentWallet
+  binding: rest
+  confidence: high
+- tool: coinrailz_agent_create_wallet
+  category: Execution
+  service: agent-create-wallet
+  rest:
+  - agentCreateWallet
+  binding: rest
+  confidence: high
+- tool: coinrailz_seamless_chain_bridge
+  category: Execution
+  service: seamless-chain-bridge
+  rest:
+  - seamlessChainBridge
+  binding: rest
+  confidence: high
+- tool: coinrailz_stock_sentiment
+  category: Investment
+  service: stock-sentiment
+  rest:
+  - stockSentiment
+  binding: rest
+  confidence: high
+- tool: coinrailz_forex_sentiment
+  category: Investment
+  service: forex-sentiment
+  rest:
+  - forexSentiment
+  binding: rest
+  confidence: high
+- tool: coinrailz_sentiment_analysis
+  category: Investment
+  service: sentiment-analysis
+  rest:
+  - sentimentAnalysis
+  binding: rest
+  confidence: high
+- tool: coinrailz_trade_signals
+  category: Investment
+  service: trade-signals
+  rest:
+  - tradeSignals
+  binding: rest
+  confidence: high
+- tool: coinrailz_trading_signal
+  category: Investment
+  service: trading-signal
+  rest:
+  - tradingSignal
+  binding: rest
+  confidence: high
+- tool: coinrailz_portfolio_optimization
+  category: Investment
+  service: portfolio-optimization
+  rest:
+  - portfolioOptimization
+  binding: rest
+  confidence: high
+- tool: coinrailz_correlation_matrix
+  category: Market Intelligence
+  service: correlation-matrix
+  rest:
+  - correlationMatrix
+  binding: rest
+  confidence: high
+- tool: coinrailz_risk_metrics
+  category: Market Intelligence
+  service: risk-metrics
+  rest:
+  - riskMetrics
+  binding: rest
+  confidence: high
+- tool: coinrailz_arbitrage_scanner
+  category: Market Intelligence
+  service: arbitrage-scanner
+  rest:
+  - arbitrageScanner
+  binding: rest
+  confidence: high
+- tool: coinrailz_rh_stock_price
+  category: Robinhood Chain
+  service: rh-stock-price
+  rest:
+  - rhStockPrice
+  binding: rest
+  confidence: high
+- tool: coinrailz_robinhood_token_price
+  category: Robinhood Chain
+  service: robinhood-token-price
+  rest:
+  - robinhoodTokenPrice
+  binding: rest
+  confidence: high
+- tool: coinrailz_robinhood_chain_stats
+  category: Robinhood Chain
+  service: robinhood-chain-stats
+  rest:
+  - robinhoodChainStats
+  binding: rest
+  confidence: high
+- tool: coinrailz_rh_bridge_usdc
+  category: Robinhood Chain
+  service: rh-bridge-usdc
+  rest:
+  - rhBridgeUsdc
+  binding: rest
+  confidence: high
+- tool: coinrailz_robinhood_dex_pools
+  category: Robinhood Chain
+  service: robinhood-dex-pools
+  rest:
+  - robinhoodDexPools
+  binding: rest
+  confidence: high
+- tool: coinrailz_tokenized_yield_compare
+  category: RWA & Tokenization
+  service: tokenized-yield-compare
+  rest:
+  - tokenizedYieldCompare
+  binding: rest
+  confidence: high
+- tool: coinrailz_rwa_nav_oracle
+  category: RWA & Tokenization
+  service: rwa-nav-oracle
+  rest:
+  - rwaNavOracle
+  binding: rest
+  confidence: high
+- tool: coinrailz_property_valuation
+  category: Real Estate
+  service: property-valuation
+  rest:
+  - propertyValuation
+  binding: rest
+  confidence: high
+- tool: coinrailz_lease_analysis
+  category: Real Estate
+  service: lease-analysis
+  rest:
+  - leaseAnalysis
+  binding: rest
+  confidence: high
+- tool: coinrailz_construction_progress
+  category: Real Estate
+  service: construction-progress
+  rest:
+  - constructionProgress
+  binding: rest
+  confidence: high
+- tool: coinrailz_instant_api_key
+  category: Developer Tools
+  service: instant-api-key
+  rest:
+  - instantApiKey
+  binding: rest
+  confidence: high
+- tool: coinrailz_verified_agent_identity
+  category: Premium
+  service: verified-agent-identity
+  rest:
+  - verifiedAgentIdentity
+  binding: rest
+  confidence: high
+- tool: coinrailz_compliance_consultation
+  category: Premium
+  service: compliance-consultation
+  rest:
+  - complianceConsultation
+  binding: rest
+  confidence: high
+- tool: coinrailz_smart_contract_audit
+  category: Premium
+  service: smart-contract-audit
+  rest:
+  - smartContractAudit
+  binding: rest
+  confidence: high
+- tool: coinrailz_fraud_detection
+  category: Risk & Compliance APIs
+  service: fraud-detection
+  rest:
+  - fraudDetection
+  binding: rest
+  confidence: high
+- tool: coinrailz_credit_risk_score
+  category: Risk & Compliance APIs
+  service: credit-risk-score
+  rest:
+  - creditRiskScore
+  binding: rest
+  confidence: high
+- tool: coinrailz_compliance_check
+  category: Risk & Compliance APIs
+  service: compliance-check
+  rest:
+  - complianceCheck
+  binding: rest
+  confidence: high
+mcp_only: []
+rest_only:
+- operationId: getAuthCapabilities
+  method: GET
+  path: /api/auth/capabilities
+  tag: Onboarding
+- operationId: getTrialKey
+  method: GET
+  path: /api/m2m/credits/trial
+  tag: Onboarding
+- operationId: createCheckoutSession
+  method: POST
+  path: /api/m2m/credits/checkout/session
+  tag: Onboarding
+- operationId: getCheckoutStatus
+  method: GET
+  path: /api/m2m/credits/checkout/status/{sessionId}
+  tag: Onboarding
+- operationId: getMppCatalog
+  method: GET
+  path: /mpp/catalog
+  tag: MPP
+- operationId: mppPing
+  method: POST
+  path: /mpp/ping
+  tag: MPP
+- operationId: mppFirstCall
+  method: POST
+  path: /mpp/first-call
+  tag: MPP
+- operationId: mppAiInference
+  method: POST
+  path: /mpp/ai-inference
+  tag: MPP
+- operationId: mppGasPriceOracle
+  method: POST
+  path: /mpp/gas-price-oracle
+  tag: MPP
+- operationId: mppTokenMetadata
+  method: POST
+  path: /mpp/token-metadata
+  tag: MPP
+- operationId: getMppManifest
+  method: GET
+  path: /.well-known/mpp.json
+  tag: Onboarding
+- operationId: getX402Manifest
+  method: GET
+  path: /.well-known/x402.json
+  tag: Onboarding
+- operationId: getAgentInstructions
+  method: GET
+  path: /.well-known/agent-instructions.json
+  tag: Onboarding
+- operationId: getYieldManifest
+  method: GET
+  path: /api/yield/manifest
+  tag: Yield
+- operationId: getYieldRates
+  method: GET
+  path: /api/yield/rates
+  tag: Yield
+- operationId: getYieldStats
+  method: GET
+  path: /api/yield/stats
+  tag: Yield
+- operationId: getDepositTx
+  method: GET
+  path: /api/yield/deposit-tx
+  tag: Yield
+- operationId: getRedeemTx
+  method: GET
+  path: /api/yield/redeem-tx
+  tag: Yield
+- operationId: getYieldPosition
+  method: GET
+  path: /api/yield/position/{wallet}
+  tag: Yield
+- operationId: getYieldContract
+  method: GET
+  path: /api/yield/contract
+  tag: Yield
+- operationId: getSolanaYieldManifest
+  method: GET
+  path: /api/solana-yield/manifest
+  tag: Solana Yield
+- operationId: getSolanaYieldRates
+  method: GET
+  path: /api/solana-yield/rates
+  tag: Solana Yield
+- operationId: getSolanaYieldStats
+  method: GET
+  path: /api/solana-yield/stats
+  tag: Solana Yield
+- operationId: buildSolanaDepositTx
+  method: POST
+  path: /api/solana-yield/deposit-tx
+  tag: Solana Yield
+- operationId: confirmSolanaDeposit
+  method: POST
+  path: /api/solana-yield/confirm
+  tag: Solana Yield
+- operationId: getSolanaYieldPosition
+  method: GET
+  path: /api/solana-yield/position/{wallet}
+  tag: Solana Yield
+coverage:
+  tools_named: 80
+  tools_bound: 80
+  mcp_only: 0
+  rest_ops_total: 186
+  rest_ops_with_tool: 80
+  rest_only: 26

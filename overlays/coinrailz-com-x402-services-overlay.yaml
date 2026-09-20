@@ -1,0 +1,40 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Coin Railz x402 Micropayment Services
+  version: 1.0.0
+  x-generated: '2026-09-19'
+  x-method: generated
+extends: openapi/coinrailz-com-x402-services-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-source: https://coinrailz.com/openapi-x402-services.json
+    x-apievangelist-fetched: '2026-09-19'
+    x-apievangelist-provider: coinrailz-com
+    x-apievangelist-mcp: https://coinrailz.com/mcp
+    x-apievangelist-agent-card: https://coinrailz.com/.well-known/agent-card.json
+- target: $
+  update:
+    components:
+      securitySchemes:
+        apiKey:
+          type: apiKey
+          in: header
+          name: X-API-KEY
+          description: Prepaid-credits key (cr_live_...). Documented in the sibling Agent Payment API spec and in
+            /api/auth/capabilities; absent from this spec.
+        x402:
+          type: apiKey
+          in: header
+          name: X-PAYMENT
+          description: x402 v2 signed payment payload; the 402 challenge carries the accepts[] entry to sign.
+- target: $.paths.*.post
+  update:
+    security:
+    - apiKey: []
+    - x402: []
+- target: $.paths.*.post.responses
+  update:
+    '429':
+      description: Rate limit exceeded (RATE_LIMIT_EXCEEDED); body carries retryAfter seconds; RateLimit-* headers
+        observed live.

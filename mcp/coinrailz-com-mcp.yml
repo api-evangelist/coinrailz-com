@@ -1,0 +1,324 @@
+generated: '2026-09-19'
+method: probed
+status: published
+source: https://coinrailz.com/mcp (JSON-RPC tools/list, unauthenticated, HTTP 200) + https://coinrailz.com/.well-known/mcp.json
+  + https://github.com/tdnupe3/mcp-server-coinrailz
+description: 'Coin Railz operates a remote MCP server on its primary domain: POST https://coinrailz.com/mcp with
+  {jsonrpc:2.0, method:tools/list} returned 80 tools with inputSchema and outputSchema, anonymously (GET /mcp answers
+  405 ''MCP transport only supports POST requests at /mcp''). Discovery documents at /.well-known/mcp.json, /.well-known/mcp-server.json
+  and /.well-known/server-card.json name a non-standard tools_list/tools_call REST pair as well. Tool CALLS are
+  paid: each tool description carries its USDC price and calls need an X-API-KEY (cr_live_ prepaid credits, free
+  $5 trial at GET /api/m2m/credits/trial) or an x402 X-PAYMENT header. A local stdio server also ships as the PyPI
+  package coinrailz-mcp (python -m coinrailz_mcp, 63 tools, COINRAILZ_API_KEY env) from github.com/tdnupe3/mcp-server-coinrailz.
+  The full tools/list response is saved verbatim in coinrailz-com-mcp-tools-list.json.'
+server:
+  name: Coin Railz MCP Server
+  transport: http
+  url: https://coinrailz.com/mcp
+  protocol: JSON-RPC 2.0 over HTTP POST
+  auth: none for tools/list; X-API-KEY or x402 X-PAYMENT for tools/call
+  discovery:
+  - https://coinrailz.com/.well-known/mcp.json
+  - https://coinrailz.com/.well-known/mcp-server.json
+  - https://coinrailz.com/.well-known/server-card.json
+  rest_shim:
+    tools_list: https://coinrailz.com/mcp/tools/list
+    tools_call: https://coinrailz.com/mcp/tools/call
+    services: https://coinrailz.com/mcp/services
+local:
+  name: coinrailz-mcp
+  transport: stdio
+  install: pip install coinrailz-mcp
+  run: python -m coinrailz_mcp
+  env:
+  - COINRAILZ_API_KEY
+  version: 1.2.0
+  published: '2026-06-13'
+  source: https://github.com/tdnupe3/mcp-server-coinrailz
+  tools: 63
+deployment:
+  mode: both
+  endpoint: https://coinrailz.com/mcp
+  install: pip install coinrailz-mcp && python -m coinrailz_mcp
+  package: https://pypi.org/project/coinrailz-mcp/
+  auth: api-key
+  verified: probed
+  checked: '2026-09-19'
+  note: tools/list answered anonymously with 80 tools; every tool call is metered (prepaid credits or x402 on-chain
+    USDC), so auth is api-key for the callable surface.
+tools:
+- name: coinrailz_ping
+  description: '[$0.25 USDC] Ping/Echo Service — Platform health probe — returns service status, current timestamp,
+    and payment infrastructure readiness. Use as a low-cost connectivity test before calling higher-priced services.'
+- name: coinrailz_first_call
+  description: '[$0.05 USDC] x402 Golden Path — First Paid Call — START HERE. The canonical first payment endpoint
+    for any AI agent integrating with Coin Railz. Pay $0.05 USDC on Base or Solana and receive a verified onboarding
+    receipt, payment confirmation, and executable templates for the next 3 services. Both EV'
+- name: coinrailz_iot_sensor_reading
+  description: '[$0.03 USDC] IoT Sensor Reading — Single sensor reading from a registered IoT device: temperature,
+    humidity, pressure, CO2, or motion. Requires a registered deviceId. Returns timestamped value with unit and
+    quality flag.'
+- name: coinrailz_ai_inference
+  description: '[$0.05 USDC] AI Inference (GPT-4o-mini) — Pay-per-call GPT-4o-mini inference via x402 micropayment
+    — no API key required. Supports system prompt, user message, and temperature. Returns completion text.'
+- name: coinrailz_gas_price_oracle
+  description: '[$0.10 USDC] Gas Price Oracle — Real-time EIP-1559 gas prices (base fee, priority fee, fast/safe/slow
+    tiers) for Ethereum, Base, Polygon, Arbitrum, and Optimism with USD cost estimates per transaction type.'
+- name: coinrailz_weather_station_data
+  description: '[$0.05 USDC] Weather Station Data — Hyperlocal weather data from IoT weather stations: temperature,
+    humidity, pressure, wind speed/direction, and precipitation. Input: coordinates or station ID.'
+- name: coinrailz_fleet_telematics
+  description: '[$0.10 USDC] Fleet Telematics — Real-time fleet data from IoT-connected vehicles: GPS location,
+    fuel consumption, driver behavior scores, and route efficiency metrics. Requires registered fleet deviceId.'
+- name: coinrailz_iot_device_stream
+  description: '[$0.25 USDC] IoT Device Stream — Real-time streaming sensor readings from registered IoT devices:
+    temperature, humidity, pressure, CO2, and motion. Returns latest N readings with timestamps, units, and quality
+    flags.'
+- name: coinrailz_iot_bulk_data
+  description: '[$0.50 USDC] IoT Bulk Data Export — Historical data export from IoT devices: bulk sensor readings
+    filtered by device, time range, and sensor type. Returns paginated timestamped readings with units and quality
+    flags.'
+- name: coinrailz_solana_yield_finder
+  description: '[$0.05 USDC] Solana Yield Finder — Real-time Solana lending and yield rates from Kamino, Marginfi,
+    and Solend. Returns APY, TVL, utilization rate, and risk tier per protocol.'
+- name: coinrailz_token_metadata
+  description: '[$0.10 USDC] Token Metadata Lookup — Token name, symbol, decimals, total supply, and contract details
+    for any ERC-20 on Ethereum, Base, Polygon, or Arbitrum. Resolves from on-chain state — no centralized API dependency.'
+- name: coinrailz_dex_liquidity
+  description: '[$0.20 USDC] DEX Liquidity Monitor — Real-time liquidity depth, TVL, price impact, and 24h volume
+    for a token pair across Uniswap V2/V3, Curve, and Aerodrome. Input: token pair + chain.'
+- name: coinrailz_approval_manager
+  description: '[$0.20 USDC] Token Approval Manager — Check current ERC-20 allowances and generate unsigned approve()
+    calldata for any spender on any EVM chain. Required pre-step before DEX swaps or DeFi protocol interactions.'
+- name: coinrailz_token_price
+  description: '[$0.25 USDC] Token Price Feed — Token price, 24h change, volume, and market cap from CoinGecko and
+    DEX Screener. Covers 10,000+ tokens including long-tail assets unavailable on major centralized exchanges.'
+- name: coinrailz_token_sentiment
+  description: '[$0.25 USDC] Token Sentiment Analyzer — Social sentiment score for any token from X/Twitter and
+    Reddit. Returns bullish/bearish ratio, momentum direction, and top discussion themes over configurable time
+    windows.'
+- name: coinrailz_whale_alerts
+  description: '[$0.35 USDC] Whale Wallet Alerts — Recent large-value wallet transfers for any token or address:
+    amount, sender/receiver, exchange flow direction, and historical pattern context. Threshold configurable, defaults
+    to >$50K.'
+- name: coinrailz_batch_quote
+  description: '[$0.40 USDC] Batch Quote Service — DEX swap quotes for multiple token pairs in a single call. Returns
+    best route, price impact, gas estimate, and minimum received per pair — reduces round-trips for agents comparing
+    multiple swaps.'
+- name: coinrailz_multi_chain_balance
+  description: '[$0.50 USDC] Multi-Chain Balance Checker — Native token and ERC-20 balances for an EVM wallet across
+    Ethereum, Base, Polygon, Arbitrum, Optimism, and 2 more chains in a single call. Returns balances with live
+    USD values.'
+- name: coinrailz_trending_tokens
+  description: '[$0.50 USDC] Trending Tokens Feed — Top trending tokens ranked by composite score: social volume,
+    price momentum, DEX activity, and whale accumulation patterns. Returns ranked list with 24h stats and risk flags.'
+- name: coinrailz_portfolio_tracker
+  description: '[$0.50 USDC] Portfolio Tracker — Real-time portfolio value, PnL, and allocation breakdown for any
+    EVM wallet. Aggregates token balances with live USD prices and 24h performance across multiple chains.'
+- name: coinrailz_wallet_risk
+  description: '[$0.50 USDC] Wallet Risk Analyzer — Multi-factor wallet risk report: sanctions exposure, mixer interactions,
+    darknet market activity, and concentration risk. Returns risk tier (LOW/MEDIUM/HIGH/CRITICAL) with evidence
+    and recommended actions.'
+- name: coinrailz_fire_alerts
+  description: '[$0.05 USDC] NASA Fire Alerts — Real-time active fire detections from NASA FIRMS (MODIS + VIIRS).
+    Returns fire radiative power, confidence level, and coordinates for any bounding box within the past 24 hours.'
+- name: coinrailz_weather_imagery
+  description: '[$0.05 USDC] Weather Satellite Imagery — High-resolution weather satellite imagery from NASA GIBS:
+    GOES, MODIS, and Suomi-NPP. Input: bounding box, date, and imagery type (IR/visible/water vapor).'
+- name: coinrailz_air_quality
+  description: '[$0.05 USDC] Air Quality (Sentinel-5P) — Atmospheric pollutant concentrations (NO2, SO2, CO, O3,
+    aerosols) from ESA Sentinel-5P TROPOMI satellite for any global coordinate or bounding box.'
+- name: coinrailz_vegetation
+  description: '[$0.10 USDC] Vegetation Health (NDVI) — NDVI vegetation health indices from NASA MODIS and ESA Sentinel-2
+    for any global coordinate or region. Returns current health score, historical trend, and seasonal anomaly.'
+- name: coinrailz_flood_detection
+  description: '[$0.10 USDC] Flood Detection — SAR-based flood extent mapping from ESA Sentinel-1 — all-weather,
+    day/night capable. Input: bounding box and date. Returns flood polygon and affected area estimate in km².'
+- name: coinrailz_land_use
+  description: '[$0.15 USDC] Land Use Classification — Land cover classification from NASA Landsat and ESA Sentinel
+    WorldCover. Input: bounding box and date. Returns dominant land class (urban/cropland/forest/water/etc.) with
+    confidence.'
+- name: coinrailz_satellite_earthdata
+  description: '[$0.25 USDC] NASA Earthdata Gateway — NASA Earthdata gateway: precipitation, granule search, SST,
+    soil moisture, and ocean color in one endpoint. Specify the product field to select dataset type and coordinates.'
+- name: coinrailz_earthdata_granules
+  description: '[$0.25 USDC] NASA Earthdata Granule Search — Search 1B+ NASA satellite granules by bounding box,
+    date range, and collection (Landsat/Sentinel/MODIS/VIIRS). Returns download URLs and granule metadata.'
+- name: coinrailz_earthdata_precipitation
+  description: '[$0.25 USDC] NASA Precipitation Data — Real-time observed rain rate at any global coordinate from
+    NASA IMERG. Input: latitude, longitude, and date.'
+- name: coinrailz_earthdata_sst
+  description: '[$0.25 USDC] NASA Sea Surface Temperature — Sea surface temperature at any ocean coordinate from
+    NASA MUR-JPL multi-scale analysis. Sub-meter spatial accuracy. Input: lat/lon and date.'
+- name: coinrailz_earthdata_soil_moisture
+  description: '[$0.25 USDC] NASA Soil Moisture — Soil moisture granule discovery from NASA SMAP SPL3SMP at 36km
+    resolution. Returns nearest granule, volumetric water content estimate, and quality flag.'
+- name: coinrailz_earthdata_ocean_color
+  description: '[$0.25 USDC] NASA Ocean Color — MODIS Aqua ocean chlorophyll-a concentration via NASA CMR at 4km
+    resolution. Input: coordinates or bounding box and date range.'
+- name: coinrailz_b20_token_info
+  description: '[$0.05 USDC] B20 Token Info — Metadata, total supply, compliance mode, and freeze status for any
+    B20 Native Token Standard token on Base mainnet. Returns ERC-20 fields plus B20-specific compliance fields.
+    Gracefully handles plain ERC-20 tokens.'
+- name: coinrailz_b20_transfer_check
+  description: '[$0.10 USDC] B20 Transfer Check — Simulate whether a B20 token transfer will succeed given current
+    freeze/blocklist/allowlist state on Base mainnet. Returns will_succeed, specific blockers (SENDER_FROZEN, RECIPIENT_BLOCKLISTED,
+    MEMO_REQUIRED). Uses live on-chain state.'
+- name: coinrailz_b20_compliance_scan
+  description: '[$0.25 USDC] B20 Compliance Scan — Deep compliance scan of a wallet across multiple B20 token issuers
+    on Base mainnet. Returns frozen/blocklisted/allowlisted status per token, frozen-until timestamps, and overall
+    risk level (clear/restricted/mixed/unknown).'
+- name: coinrailz_vlt_usdc_deposit
+  description: '[free] vltUSDC Vault Deposit Calldata — FREE — No payment required. Returns unsigned approve + deposit
+    calldata for the Bankroll Network vltUSDC vault on Ethereum mainnet. Two modes: balanced (VLT+USDC, 3 txs) or
+    USDC-only via ZapHelper with live swap quote (2 txs). Vault auto-compounds VLT/USDC Uni'
+- name: coinrailz_vlt_usdc_withdraw
+  description: '[free] vltUSDC Vault Withdraw Calldata — FREE — No payment required. Returns 1 unsigned vault.redeem(shares,
+    receiver) transaction. Redemption is pro-rata in-kind (no swap, no slippage parameters on-chain). Estimated
+    VLT + USDC output amounts are included as informational context only — they are NOT'
+- name: coinrailz_vlt_usdc_zap_withdraw
+  description: '[free] vltUSDC Vault USDC-Only Exit Calldata — FREE — No payment required. Returns 3 unsigned Ethereum
+    transactions that convert vltUSDC shares entirely to USDC: (1) vault.redeem(shares, recipient) — burns shares,
+    sends VLT + USDC to recipient; (2) VLT.approve(uniswapV2Router, vltAmount); (3) v2Rout'
+- name: coinrailz_vlt_stats
+  description: '[$0.05 USDC] VLT + vltUSDC Vault Stats — Live VLT token price, market cap, liquidity, and vltUSDC
+    vault stats (TVL, estimated LP fee APR, L/share). Sources: CoinGecko + DexScreener (market) and Alchemy on-chain
+    reads (vault state). Use for autonomous allocation decisions alongside vlt-usdc-deposit a'
+- name: coinrailz_polymarket_events
+  description: '[$0.25 USDC] Polymarket Events — Trending Polymarket prediction market events with current yes/no
+    prices, volume, and liquidity across politics, crypto, sports, and science.'
+- name: coinrailz_polymarket_search
+  description: '[$0.25 USDC] Polymarket Search — Search Polymarket prediction markets by keyword or topic. Returns
+    matching events with current prices, volume, and market close date.'
+- name: coinrailz_kalshi_markets
+  description: '[$0.25 USDC] Kalshi Markets — Active markets from Kalshi, a CFTC-regulated prediction exchange.
+    Returns yes/no ask prices, volume, and open interest. Filter by category or keyword.'
+- name: coinrailz_kalshi_search
+  description: '[$0.25 USDC] Kalshi Search — Search Kalshi prediction markets by keyword or event type. Returns
+    matching CFTC-regulated markets with current yes prices, volume, and expiration dates.'
+- name: coinrailz_prediction_market_spread
+  description: '[$0.25 USDC] Prediction Market Cross-Platform Spread — Live cross-platform spread analysis: Polymarket
+    vs Kalshi for identical real-world events. Returns YES probability divergence, arbitrage opportunity ranking
+    by spread magnitude, matchConfidence, actionHint, and edgeBps per opportunity.'
+- name: coinrailz_polymarket_odds
+  description: '[$0.50 USDC] Polymarket Odds — Current odds and price history for a specific Polymarket event. Returns
+    yes/no bid/ask, 24h volume, and last trade timestamp.'
+- name: coinrailz_prediction_market_odds
+  description: '[$0.50 USDC] Prediction Market Odds — Aggregated prediction market odds from Polymarket and Kalshi
+    for any topic. Returns consensus probability with per-platform breakdown and total volume.'
+- name: coinrailz_kalshi_odds
+  description: '[$0.50 USDC] Kalshi Odds — Current yes/no prices and orderbook depth for a specific Kalshi market.
+    Returns bid/ask spread, last price, volume, and open interest for CFTC-regulated event contracts.'
+- name: coinrailz_transaction_builder
+  description: '[$0.30 USDC] Transaction Builder — Encode and prepare any EVM transaction: ABI encoding, calldata
+    construction, gas estimation, and nonce lookup for Ethereum, Base, Arbitrum, and Optimism.'
+- name: coinrailz_payment_processing
+  description: '[$0.50 USDC] Payment Processing — Process USDC payments across EVM chains with automatic routing
+    and fee optimization. Returns transaction receipt, confirmed amount, and destination chain confirmation.'
+- name: coinrailz_contract_scan
+  description: '[$1.00 USDC] Contract Security Scanner — Smart contract security scan returning a safety score (0-100)
+    and structured vulnerability findings (reentrancy, overflow, access control, logic flaws) for any deployed EVM
+    contract address.'
+- name: coinrailz_instant_agent_wallet
+  description: '[$1.00 USDC] Instant Agent Wallet — Create a session-scoped ephemeral EVM wallet for AI agent operations.
+    Returns address and encrypted key material with USDC funding instructions. Designed for single-session autonomous
+    use.'
+- name: coinrailz_agent_create_wallet
+  description: '[$2.00 USDC] Agent Wallet Provisioning (CDP) — Create a persistent Coinbase Developer Platform (CDP)
+    managed wallet for AI agents on Base mainnet. Returns wallet address and API credentials for long-running autonomous
+    deployments.'
+- name: coinrailz_seamless_chain_bridge
+  description: '[$2.00 USDC] Seamless Chain Bridge — Cross-chain bridge calldata via Across Protocol for Ethereum,
+    Base, Arbitrum, Optimism, and Polygon. Returns unsigned bridge transaction with fee breakdown, estimated settlement
+    time, and minimum received.'
+- name: coinrailz_stock_sentiment
+  description: '[$0.40 USDC] Stock Sentiment Analysis — AI stock sentiment for any ticker integrating earnings transcripts,
+    news flow, options flow, and institutional positioning. Returns directional bias with short and medium-term
+    signal strength.'
+- name: coinrailz_forex_sentiment
+  description: '[$0.40 USDC] Forex Sentiment Analysis — AI forex sentiment for major currency pairs integrating
+    central bank signals, economic indicators, and news flow. Returns directional bias (bullish/bearish), confidence
+    score, and top driving factors.'
+- name: coinrailz_sentiment_analysis
+  description: '[$0.50 USDC] Market Sentiment Analysis — Aggregated market sentiment for any crypto asset from X/Twitter,
+    Reddit, and news sources. Returns bullish/bearish score (0-100), momentum signal, and 24h sentiment delta.'
+- name: coinrailz_trade_signals
+  description: '[$0.75 USDC] AI Trade Signals — AI crypto trading signals with entry price, stop-loss, take-profit,
+    position size recommendation, and risk/reward ratio. Based on technical indicators and on-chain flow analysis.'
+- name: coinrailz_trading_signal
+  description: '[$1.00 USDC] Trading Signal Generator — Technical analysis signals — RSI, MACD, Bollinger Bands,
+    volume profile, and trend strength — for any crypto pair. Returns buy/sell/hold verdict with confidence interval
+    and key price levels.'
+- name: coinrailz_portfolio_optimization
+  description: '[$2.00 USDC] Portfolio Optimization — AI crypto portfolio rebalancing using Modern Portfolio Theory.
+    Input current holdings and risk tolerance; returns target allocation with projected Sharpe ratio and expected
+    return improvement.'
+- name: coinrailz_correlation_matrix
+  description: '[$0.75 USDC] Correlation Matrix — Price correlation matrix for up to 10 crypto assets over 7/30/90-day
+    windows. Returns Pearson coefficients to identify diversification gaps and correlated risk in a portfolio.'
+- name: coinrailz_risk_metrics
+  description: '[$1.00 USDC] Risk Metrics Calculator — Portfolio risk metrics: Value at Risk (95%/99% confidence),
+    Sharpe ratio, max drawdown, and Sortino ratio for any token or portfolio, based on historical price data.'
+- name: coinrailz_arbitrage_scanner
+  description: '[$1.25 USDC] Arbitrage Scanner — Scan for real-time arbitrage opportunities across Uniswap, Curve,
+    and Balancer. Returns path, estimated gross profit, gas cost, and net yield per opportunity.'
+- name: coinrailz_rh_stock_price
+  description: '[$0.05 USDC] Robinhood Chain Stock Price Feed — Live Chainlink SVR price feeds for 35+ stock tokens
+    (AAPL, NVDA, SPY, TSLA, META, AMZN, MSFT, GOOGL, COIN, PLTR, and more) on Robinhood Chain. 8-decimal precision.
+    Batch up to 10 symbols per call.'
+- name: coinrailz_robinhood_token_price
+  description: '[$0.60 USDC] Robinhood Chain Token Price — Real-time token price and pool data for any token on
+    Robinhood Chain (eip155:4663) via Chainlink SVR feeds. Returns price, 24h change, and top liquidity pool.'
+- name: coinrailz_robinhood_chain_stats
+  description: '[$0.75 USDC] Robinhood Chain Health Stats — Chain-level health metrics for Robinhood Chain (eip155:4663):
+    current block height, gas price, validator count, and network TPS via Chainlink on-chain reads.'
+- name: coinrailz_rh_bridge_usdc
+  description: '[$0.75 USDC] Robinhood Chain Bootstrap Bridge — Bridge 0.50 USDC from Base (chainId 8453) to USDG
+    on Robinhood Chain (chainId 4663) via Across Protocol. Treasury-funded — no pre-approval required. Returns unsigned
+    bridge calldata; USDG arrives in ~30 seconds. Ideal for bootstrapping an RH Chain agen'
+- name: coinrailz_robinhood_dex_pools
+  description: '[$1.25 USDC] Robinhood Chain DEX Pools — Top DEX liquidity pools on Robinhood Chain. Pass a token
+    address for token-specific pools, or omit for chain-wide top pools by liquidity. Includes fee tier, 24h volume,
+    and pool addresses.'
+- name: coinrailz_tokenized_yield_compare
+  description: '[$0.25 USDC] Tokenized Treasury Yield Comparison — Live APY comparison across tokenized RWA protocols:
+    Ondo (USDY), Backed (bIB01), Superstate (USTB), Mountain Protocol (USDM), OpenEden (TBILL), Hashnote (USYC),
+    Maple Finance. Sourced from DeFi Llama.'
+- name: coinrailz_rwa_nav_oracle
+  description: '[$0.50 USDC] RWA Synthetic NAV Oracle — Synthetic market-based NAV estimate for RWA tokens (real
+    estate, private credit, tokenized treasuries). Returns current NAV per share, implied yield, and protocol metadata.'
+- name: coinrailz_property_valuation
+  description: '[$0.75 USDC] Property Valuation — AI-powered real estate property valuation using comparable sales,
+    zoning data, and market trends. Returns estimated value range with confidence interval and key value drivers.'
+- name: coinrailz_lease_analysis
+  description: '[$1.00 USDC] Lease Analysis — Commercial lease terms extraction and risk analysis. Returns key clauses
+    (rent escalation, break options, TI allowance), market rate comparison, and red-flag summary.'
+- name: coinrailz_construction_progress
+  description: '[$1.50 USDC] Construction Progress Tracker — Construction site progress assessment using multi-source
+    satellite imagery and AI analysis. Input site coordinates and date range; returns phase classification and change
+    detection report.'
+- name: coinrailz_instant_api_key
+  description: '[$1.00 USDC] Instant API Key — Frictionless API key provisioning via USDC payment. Pay once, receive
+    a prepaid credits key instantly — no sign-up, no OAuth, no waitlist. Works across the canonical x402 service
+    catalog.'
+- name: coinrailz_verified_agent_identity
+  description: '[$5.00 USDC] Agent Identity Ownership Check — Check whether a wallet owns an ERC-8004 identity NFT
+    on Base mainnet and return an ownership, wallet-activity, and signature status assessment. This service queries
+    existing on-chain records; it does not register an agent, mint an NFT, or write to the Id'
+- name: coinrailz_compliance_consultation
+  description: '[$5.00 USDC] Compliance Consultation — Informational technical regulatory-analysis output for DeFi
+    protocols, token launches, and on-chain operations. It is not legal advice or a regulated compliance service.'
+- name: coinrailz_smart_contract_audit
+  description: '[$10.00 USDC] Smart Contract Audit — AI security audit for Solidity contracts: reentrancy, overflow/underflow,
+    access control, and business logic flaws. Returns severity-ranked findings (CRITICAL/HIGH/MEDIUM/LOW) with line
+    references and remediation guidance.'
+- name: coinrailz_fraud_detection
+  description: '[$0.75 USDC] Fraud Detection — Informational technical fraud-risk output for an on-chain transaction
+    or wallet. It is not banking, legal, or regulated advice.'
+- name: coinrailz_credit_risk_score
+  description: '[$1.25 USDC] Credit Risk Score — Informational technical on-chain risk score for an EVM wallet.
+    It is not credit underwriting, lending, banking, or regulated advice.'
+- name: coinrailz_compliance_check
+  description: '[$1.75 USDC] Compliance Check — Informational technical wallet-risk output based on configured data
+    sources. It is not legal advice, a banking service, or a regulated compliance determination.'
+tools_file: coinrailz-com-mcp-tools-list.json

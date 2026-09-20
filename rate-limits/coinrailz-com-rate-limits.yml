@@ -1,0 +1,57 @@
+generated: '2026-09-19'
+method: probed
+source: Live headers on POST https://coinrailz.com/x402/ping (2026-09-19, unauthenticated) + https://coinrailz.com/.well-known/agent.json#rateLimits
+  + agent-instructions.json + agent-registration.json
+limit_count: 5
+limits:
+- scope: per-client, /x402/* services (observed)
+  window: 60s
+  limit: 200
+  burst: null
+  source: 'observed header ratelimit-policy: 200;w=60 on POST /x402/ping'
+  method: probed
+- scope: platform (published)
+  window: 1 minute
+  limit: 60
+  burst: 10
+  source: https://coinrailz.com/.well-known/agent.json#rateLimits.requestsPerMinute / burstLimit
+  method: searched
+  note: Published figure (60/min) is lower than the observed header policy (200/60s); both recorded.
+- scope: platform (published)
+  window: 1 hour
+  limit: 1000
+  source: agent.json#rateLimits.requestsPerHour
+  method: searched
+- scope: per-IP, GET /api/m2m/credits/trial
+  window: 7 days
+  limit: 1
+  source: agent-instructions.json + live 402 body trial_access
+  method: searched
+- scope: per-IP, POST /.well-known/agent-registration.json
+  window: 1 minute
+  limit: 10
+  source: agent-registration.json#registration.rateLimit
+  method: searched
+response_headers:
+- ratelimit-limit
+- ratelimit-policy
+- ratelimit-remaining
+- ratelimit-reset
+exhaustion:
+  status: 429
+  code: RATE_LIMIT_EXCEEDED
+  body_fields:
+  - error
+  - code
+  - retryAfter
+  retry_after_header: not observed (retryAfter is a body field per agent.json)
+observed:
+  url: https://coinrailz.com/x402/ping
+  status: 402
+  headers:
+    ratelimit-limit: '200'
+    ratelimit-policy: 200;w=60
+    ratelimit-remaining: '199'
+    ratelimit-reset: '60'
+  fetched: '2026-09-19'
+note: Credit metering headers (X-Credits-Used, X-Credits-Remaining, X-Recharge-Url) accompany paid calls per mcp-integration.json.

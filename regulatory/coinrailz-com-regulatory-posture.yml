@@ -1,0 +1,37 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+description: 'Horizontal regulatory signals HARVESTED from public surfaces. coinrailz.com is a client-rendered SPA:
+  /privacy-policy, /terms-of-service, /legal, /legal/subprocessors, /accessibility and /security all return the
+  same 14128-byte shell, and only /privacy-policy, /terms-of-service and /security are routes in the app bundle,
+  so no page substance could be read. No signal met the substance bar; signals is empty by measurement, not by omission.'
+signals: {}
+probed:
+- url: https://coinrailz.com/privacy-policy
+  status: 200
+  note: SPA shell; route exists in bundle; text not readable server-side
+- url: https://coinrailz.com/terms-of-service
+  status: 200
+  note: SPA shell; route exists in bundle
+- url: https://coinrailz.com/security
+  status: 200
+  note: SPA shell; route exists in bundle
+- url: https://coinrailz.com/legal
+  status: 200
+  note: SPA shell; no such route in bundle (soft-404)
+- url: https://coinrailz.com/legal/subprocessors
+  status: 200
+  note: SPA shell; no such route (soft-404)
+- url: https://coinrailz.com/accessibility
+  status: 200
+  note: SPA shell; no such route (soft-404)
+- url: https://coinrailz.com/.well-known/security.txt
+  status: 404
+observations:
+- kind: security_contact
+  value: mailto:security@coinrailz.com
+  source: https://coinrailz.com/.well-known/agent.json#securityContact
+  note: A contact, not a policy; recorded in security/coinrailz-com-vulnerability-disclosure.yml.
+- kind: operator
+  value: Kellogg Holdings LLC
+  source: https://coinrailz.com/llms.txt

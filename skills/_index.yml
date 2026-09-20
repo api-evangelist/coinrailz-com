@@ -1,0 +1,41 @@
+generated: '2026-09-19'
+method: generated
+provider: coinrailz-com
+skills:
+- file: coinrailz-com-onboard-with-trial-key.md
+  name: Onboard an agent with the free trial key
+  description: Get a free $5 Coin Railz API key with no wallet or card, then call any metered service with it.
+  api: coinrailz-com:agent-payment-api
+  operations:
+  - getTrialKey
+  - getAuthCapabilities
+  - ping
+  - gasPriceOracle
+- file: coinrailz-com-pay-per-call-with-x402.md
+  name: Pay for a single call with x402 USDC
+  description: Answer a Coin Railz HTTP 402 challenge with a signed on-chain USDC payment and retry the request.
+  api: coinrailz-com:x402-services
+  operations:
+  - ping
+  - first-call
+  - tokenPrice
+- file: coinrailz-com-buy-credits-by-card.md
+  name: Buy prepaid credits by card (hosted checkout)
+  description: Fund an agent with prepaid credits through Stripe hosted checkout and poll for the auto-provisioned
+    API key.
+  api: coinrailz-com:agent-payment-api
+  operations:
+  - createCheckoutSession
+  - getCheckoutStatus
+- file: coinrailz-com-park-usdc-in-yield-vault.md
+  name: Park idle USDC in the yield vault
+  description: Deposit idle agent USDC into the ERC-4626 vault on Base between trades and redeem it on demand, non-custodially.
+  api: coinrailz-com:agent-payment-api
+  operations:
+  - getYieldManifest
+  - getYieldRates
+  - getYieldStats
+  - getDepositTx
+  - getYieldPosition
+  - getRedeemTx
+  - getYieldContract
