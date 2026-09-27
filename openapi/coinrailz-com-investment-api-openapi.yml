@@ -1,0 +1,302 @@
+openapi: 3.2.0
+info:
+  title: Coinrailz Com Investment API
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-refined-note:
+  - x-payment-manifest differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Investment across 2 of this provider''s published API definitions: coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+tags:
+- name: Investment
+  description: Trading signals and portfolio optimization
+paths:
+  /x402/trade-signals:
+    post:
+      tags:
+      - Investment
+      summary: AI Trade Signals
+      description: AI crypto trading signals with entry price, stop-loss, take-profit, position size recommendation, and risk/reward ratio. Based on technical indicators and on-chain flow analysis.
+      x-price-usd: 0.75
+      operationId: tradeSignals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  default: BTC/USDT
+                timeframe:
+                  type: string
+                  enum:
+                  - 5m
+                  - 15m
+                  - 1h
+                  - 4h
+                  - 1d
+                riskLevel:
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
+      responses:
+        '200':
+          description: Trading signal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signal:
+                    type: string
+                  entry:
+                    type: number
+                  target:
+                    type: number
+                  stopLoss:
+                    type: number
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/sentiment-analysis:
+    post:
+      tags:
+      - Investment
+      summary: Market Sentiment Analysis
+      description: Aggregated market sentiment for any crypto asset from X/Twitter, Reddit, and news sources. Returns bullish/bearish score (0-100), momentum signal, and 24h sentiment delta.
+      x-price-usd: 0.5
+      operationId: sentimentAnalysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+              properties:
+                query:
+                  type: string
+                sources:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Sentiment analysis
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/trading-signal:
+    post:
+      tags:
+      - Investment
+      summary: Trading Signal Generator
+      description: Technical analysis signals — RSI, MACD, Bollinger Bands, volume profile, and trend strength — for any crypto pair. Returns buy/sell/hold verdict with confidence interval and key price levels.
+      x-price-usd: 1
+      operationId: tradingSignal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - pair
+              properties:
+                pair:
+                  type: string
+                timeframe:
+                  type: string
+                indicators:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Trading signal with confidence
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/portfolio-optimization:
+    post:
+      tags:
+      - Investment
+      summary: Portfolio Optimization
+      description: AI crypto portfolio rebalancing using Modern Portfolio Theory. Input current holdings and risk tolerance; returns target allocation with projected Sharpe ratio and expected return improvement.
+      x-price-usd: 2
+      operationId: portfolioOptimization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - holdings
+              properties:
+                holdings:
+                  type: array
+                riskTolerance:
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
+                targetReturn:
+                  type: number
+      responses:
+        '200':
+          description: Optimized portfolio allocation
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/stock-sentiment:
+    post:
+      tags:
+      - Investment
+      summary: Stock Sentiment Analysis
+      description: AI stock sentiment for any ticker integrating earnings transcripts, news flow, options flow, and institutional positioning. Returns directional bias with short and medium-term signal strength.
+      x-price-usd: 0.4
+      operationId: stockSentiment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - symbol
+              properties:
+                symbol:
+                  type: string
+                  description: Stock ticker symbol (e.g., AAPL, TSLA, NVDA)
+      responses:
+        '200':
+          description: Stock sentiment analysis with news and technical indicators
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/forex-sentiment:
+    post:
+      tags:
+      - Investment
+      summary: Forex Sentiment Analysis
+      description: AI forex sentiment for major currency pairs integrating central bank signals, economic indicators, and news flow. Returns directional bias (bullish/bearish), confidence score, and top driving factors.
+      x-price-usd: 0.4
+      operationId: forexSentiment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - pair
+              properties:
+                pair:
+                  type: string
+                  description: Currency pair (e.g., EUR/USD, GBP/JPY, USD/CHF)
+      responses:
+        '200':
+          description: Forex sentiment analysis with economic indicators
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog
+x-refined-from:
+- coinrailz-com-agent-payment-api-openapi.json
+- coinrailz-com-x402-services-openapi.yml

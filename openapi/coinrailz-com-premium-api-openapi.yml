@@ -1,0 +1,186 @@
+openapi: 3.2.0
+info:
+  title: Coinrailz Com Premium API
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-refined-note:
+  - x-payment-manifest differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Premium across 2 of this provider''s published API definitions: coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+tags:
+- name: Premium
+  description: High-value professional services
+paths:
+  /x402/verified-agent-identity:
+    post:
+      tags:
+      - Premium
+      summary: Agent Identity Ownership Check
+      description: Check whether a wallet owns an ERC-8004 identity NFT on Base mainnet and return an ownership, wallet-activity, and signature status assessment. This service queries existing on-chain records; it does not register an agent, mint an NFT, or write to the IdentityRegistry.
+      x-price-usd: 5
+      operationId: verifiedAgentIdentity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - agentId
+              - walletAddress
+              properties:
+                agentId:
+                  type: string
+                walletAddress:
+                  type: string
+                  description: Wallet address whose existing identity ownership and activity should be checked.
+                signature:
+                  type: string
+                  description: Optional caller signature included in the status assessment.
+                metadata:
+                  type: object
+                  additionalProperties: true
+                capabilities:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Identity ownership and verification status retrieved; no registration or minting is performed.
+        '402':
+          description: Payment Required
+      x-featured: true
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/compliance-consultation:
+    post:
+      tags:
+      - Premium
+      summary: Compliance Consultation
+      description: Informational technical regulatory-analysis output for DeFi protocols, token launches, and on-chain operations. It is not legal advice or a regulated compliance service.
+      x-price-usd: 5
+      operationId: complianceConsultation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - operationType
+              - jurisdiction
+              properties:
+                operationType:
+                  type: string
+                jurisdiction:
+                  type: string
+                details:
+                  type: object
+      responses:
+        '200':
+          description: Informational technical compliance-analysis output; not legal or regulated advice
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/smart-contract-audit:
+    post:
+      tags:
+      - Premium
+      summary: Smart Contract Audit
+      description: 'AI security audit for Solidity contracts: reentrancy, overflow/underflow, access control, and business logic flaws. Returns severity-ranked findings (CRITICAL/HIGH/MEDIUM/LOW) with line references and remediation guidance.'
+      x-price-usd: 10
+      operationId: smartContractAudit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - contractAddress
+              - chain
+              properties:
+                contractAddress:
+                  type: string
+                chain:
+                  type: string
+                sourceCode:
+                  type: string
+                  description: Optional source code for deeper analysis
+      responses:
+        '200':
+          description: Full audit report
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog
+x-refined-from:
+- coinrailz-com-agent-payment-api-openapi.json
+- coinrailz-com-x402-services-openapi.yml

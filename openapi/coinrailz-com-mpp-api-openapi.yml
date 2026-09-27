@@ -1,0 +1,158 @@
+openapi: 3.2.0
+info:
+  title: Coin Railz Agent Payment MPP API
+  version: 3.0.0
+  description: Production-grade x402 micropayment infrastructure for AI agents.
+  contact:
+    email: support@coinrailz.com
+    url: https://coinrailz.com
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-payment-manifest: https://coinrailz.com/x402/payment-manifest.json
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+- url: https://coinrailz.com
+  description: Production
+security:
+- apiKey: []
+tags:
+- name: MPP
+  description: MPP (Machine Payments Protocol) endpoints — pathUSD via Tempo. See /.well-known/mpp.json
+paths:
+  /mpp/catalog:
+    get:
+      operationId: getMppCatalog
+      summary: MPP service catalog — flagship services with pathUSD pricing
+      security: []
+      tags:
+      - MPP
+      responses:
+        '200':
+          description: MPP service list with amounts and endpoints
+  /mpp/ping:
+    post:
+      operationId: mppPing
+      summary: MPP echo/discovery — $0.25 pathUSD
+      security:
+      - mpp: []
+      tags:
+      - MPP
+      responses:
+        '200':
+          description: Echo response with platform info
+        '402':
+          description: 'MPP payment challenge (WWW-Authenticate: Payment)'
+  /mpp/first-call:
+    post:
+      operationId: mppFirstCall
+      summary: MPP golden path onboarding — $0.05 pathUSD
+      security:
+      - mpp: []
+      tags:
+      - MPP
+      responses:
+        '200':
+          description: Onboarding success
+        '402':
+          description: MPP payment challenge
+  /mpp/ai-inference:
+    post:
+      operationId: mppAiInference
+      summary: GPT-4o-mini inference via MPP — $0.05 pathUSD
+      security:
+      - mpp: []
+      tags:
+      - MPP
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - prompt
+              properties:
+                prompt:
+                  type: string
+                systemPrompt:
+                  type: string
+                maxTokens:
+                  type: integer
+                  example: 1024
+      responses:
+        '200':
+          description: AI inference result
+        '402':
+          description: MPP payment challenge
+  /mpp/gas-price-oracle:
+    post:
+      operationId: mppGasPriceOracle
+      summary: Multi-chain gas prices via MPP — $0.10 pathUSD
+      security:
+      - mpp: []
+      tags:
+      - MPP
+      responses:
+        '200':
+          description: Gas prices across chains
+        '402':
+          description: MPP payment challenge
+  /mpp/token-metadata:
+    post:
+      operationId: mppTokenMetadata
+      summary: Token metadata via MPP — $0.10 pathUSD
+      security:
+      - mpp: []
+      tags:
+      - MPP
+      responses:
+        '200':
+          description: Token name, symbol, decimals, supply
+        '402':
+          description: MPP payment challenge
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog

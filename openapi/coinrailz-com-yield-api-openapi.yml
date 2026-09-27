@@ -1,0 +1,202 @@
+openapi: 3.2.0
+info:
+  title: Coin Railz Agent Payment Yield API
+  version: 3.0.0
+  description: Production-grade x402 micropayment infrastructure for AI agents.
+  contact:
+    email: support@coinrailz.com
+    url: https://coinrailz.com
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-payment-manifest: https://coinrailz.com/x402/payment-manifest.json
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+- url: https://coinrailz.com
+  description: Production
+security:
+- apiKey: []
+tags:
+- name: Yield
+  description: Non-custodial USDC yield vault — ERC-4626 auto-routing across Aave v3, Compound v3, and Morpho Blue on Base. No lockup, 0% exit fee.
+paths:
+  /api/yield/manifest:
+    get:
+      operationId: getYieldManifest
+      summary: USDC Yield Vault manifest — ERC-4626 auto-routing yield on Base
+      description: Full agent integration guide for the non-custodial USDC yield vault. Returns current APY, agentkit quickstart, REST paths (deposit-tx, redeem-tx, position), fees, and security properties. No auth required.
+      security: []
+      tags:
+      - Yield
+      responses:
+        '200':
+          description: Vault manifest with agentkit quickstart and REST integration paths
+      x-codeSamples:
+      - lang: Shell
+        label: curl
+        source: curl https://coinrailz.com/api/yield/manifest
+  /api/yield/rates:
+    get:
+      operationId: getYieldRates
+      summary: Live APY from Aave v3, Compound v3, and Morpho Blue on Base
+      description: Returns current gross APY and net APY for all three protocols. Cached 60s. Response includes Link header pointing to manifest and X-Agent-Tip for agentkit integration.
+      security: []
+      tags:
+      - Yield
+      responses:
+        '200':
+          description: Live rates per protocol and current best APY
+  /api/yield/stats:
+    get:
+      operationId: getYieldStats
+      summary: Vault TVL, active protocol, rebalance status, and fee structure
+      description: Returns vault address, TVL in USDC, price-per-share (crUSDC), fee structure, and time until next rebalance.
+      security: []
+      tags:
+      - Yield
+      responses:
+        '200':
+          description: Vault statistics and routing status
+  /api/yield/deposit-tx:
+    get:
+      operationId: getDepositTx
+      summary: Pre-built deposit calldata — standard (2 txs) or permit (1 tx)
+      description: 'Returns ready-to-sign transactions. Default: 2 txs (USDC approve + ERC-4626 deposit). Use ?mode=permit for 1-tx EIP-2612 permit path (~50% less gas). Use ?preset=100 for a USD preset OR ?amount=150 for a custom dollar amount. Requires ?recipient=0xYOUR_WALLET.'
+      security: []
+      tags:
+      - Yield
+      parameters:
+      - name: preset
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 10
+          - 50
+          - 100
+          - 250
+          - 1000
+        description: 'USD preset amount (pick one: preset OR amount)'
+      - name: amount
+        in: query
+        schema:
+          type: number
+        description: 'Custom USD amount (pick one: preset OR amount). Example: 150 for $150'
+      - name: recipient
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Recipient wallet address (0x...)
+      - name: mode
+        in: query
+        schema:
+          type: string
+          enum:
+          - standard
+          - permit
+        description: standard = 2 txs (USDC approve + ERC-4626 deposit), permit = 1 tx via EIP-2612 (~50% less gas)
+      responses:
+        '200':
+          description: Pre-built transaction steps ready to sign and broadcast
+      x-codeSamples:
+      - lang: Shell
+        label: curl
+        source: curl "https://coinrailz.com/api/yield/deposit-tx?preset=100&recipient=0xYOUR_WALLET"
+  /api/yield/redeem-tx:
+    get:
+      operationId: getRedeemTx
+      summary: Pre-built redeem calldata — burns crUSDC shares, returns USDC (1 tx, 0% exit…
+      description: Returns a single ready-to-sign transaction to redeem all crUSDC shares. No approval needed. 0% exit fee. Requires ?wallet=0xYOUR_WALLET.
+      security: []
+      tags:
+      - Yield
+      parameters:
+      - name: wallet
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Wallet holding crUSDC shares
+      responses:
+        '200':
+          description: Single redeem transaction step
+  /api/yield/position/{wallet}:
+    get:
+      operationId: getYieldPosition
+      summary: Live position for a wallet — shares, USD value, yield earned
+      description: Returns crUSDC shares held, current USD value, estimated yield, net yield (after performance fee), and redeem_hint (ready-to-sign withdraw tx). If position is zero, includes next_action hints.
+      security: []
+      tags:
+      - Yield
+      parameters:
+      - name: wallet
+        in: path
+        required: true
+        schema:
+          type: string
+        description: EVM wallet address (0x...)
+      responses:
+        '200':
+          description: Position data with optional next_action hints when no position exists
+      x-codeSamples:
+      - lang: Shell
+        label: curl
+        source: curl "https://coinrailz.com/api/yield/position/0xYOUR_WALLET"
+  /api/yield/contract:
+    get:
+      operationId: getYieldContract
+      summary: Vault ABI, addresses, audit status, and integration guide
+      description: Returns vault and USDC contract addresses, full ERC-4626 ABI, permit helper contract, fee structure, and integration guide. Use deposit-tx endpoint instead of calling the ABI directly — it pre-builds the calldata.
+      security: []
+      tags:
+      - Yield
+      responses:
+        '200':
+          description: Contract info, ABI, and agent integration guide
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog

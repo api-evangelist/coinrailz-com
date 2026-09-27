@@ -1,0 +1,222 @@
+openapi: 3.2.0
+info:
+  title: Coin Railz Agent Payment Onboarding API
+  version: 3.0.0
+  description: Production-grade x402 micropayment infrastructure for AI agents.
+  contact:
+    email: support@coinrailz.com
+    url: https://coinrailz.com
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-payment-manifest: https://coinrailz.com/x402/payment-manifest.json
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+- url: https://coinrailz.com
+  description: Production
+security:
+- apiKey: []
+tags:
+- name: Onboarding
+  description: Get an API key or checkout session — no wallet required
+paths:
+  /api/auth/capabilities:
+    get:
+      operationId: getAuthCapabilities
+      summary: List all supported auth and payment modes
+      description: Machine-readable discovery document. No auth required. Returns all paths to obtain an API key or make x402 payments.
+      security: []
+      tags:
+      - Onboarding
+      responses:
+        '200':
+          description: Auth modes and onboarding paths
+      x-codeSamples:
+      - lang: Python
+        label: httpx
+        source: 'import httpx
+
+          resp = httpx.get("https://coinrailz.com/api/auth/capabilities")
+
+          print(resp.json())'
+      - lang: Shell
+        label: curl
+        source: curl https://coinrailz.com/api/auth/capabilities
+  /api/m2m/credits/trial:
+    get:
+      operationId: getTrialKey
+      summary: Get a free $5 trial API key (~80-100 service calls)
+      description: 'Issues a cr_live_ API key with $5 prepaid credits. No payment, no wallet required. Rate limited: 1 per IP per 7 days.'
+      security: []
+      tags:
+      - Onboarding
+      responses:
+        '200':
+          description: Trial key issued — save the apiKey value immediately, shown once only
+        '403':
+          description: Internal IP — trial reserved for external agents
+        '429':
+          description: Trial already claimed from this IP — upgrade to paid credits
+      x-codeSamples:
+      - lang: Python
+        label: httpx
+        source: 'import httpx
+
+          resp = httpx.get("https://coinrailz.com/api/m2m/credits/trial")
+
+          data = resp.json()
+
+          api_key = data["apiKey"]  # Save this — shown once only'
+      - lang: Shell
+        label: curl
+        source: curl https://coinrailz.com/api/m2m/credits/trial
+  /api/m2m/credits/checkout/session:
+    post:
+      operationId: createCheckoutSession
+      summary: Create a Stripe Hosted Checkout session for purchasing credits
+      description: No Stripe.js required. Returns a checkoutUrl the operator opens in a browser. On payment, webhook auto-provisions credits + API key.
+      security: []
+      tags:
+      - Onboarding
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amountUsd
+              properties:
+                amountUsd:
+                  type: number
+                  enum:
+                  - 5
+                  - 10
+                  - 25
+                  - 100
+                  description: Credit tier in USD.
+                email:
+                  type: string
+                  format: email
+                  description: Optional — for Stripe receipt.
+                keyName:
+                  type: string
+                  description: Optional label for the generated API key.
+            example:
+              amountUsd: 10
+      responses:
+        '200':
+          description: Checkout session created with checkoutUrl and retrievalToken
+        '400':
+          description: Invalid amountUsd
+      x-codeSamples:
+      - lang: Python
+        label: httpx
+        source: "import httpx\nresp = httpx.post(\"https://coinrailz.com/api/m2m/credits/checkout/session\",\n    json={\"amountUsd\": 10})\ndata = resp.json()\nprint(\"Open to pay:\", data[\"checkoutUrl\"])"
+      - lang: Shell
+        label: curl
+        source: "curl -X POST https://coinrailz.com/api/m2m/credits/checkout/session \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"amountUsd\":10}'"
+  /api/m2m/credits/checkout/status/{sessionId}:
+    get:
+      operationId: getCheckoutStatus
+      summary: Poll for API key after Hosted Checkout payment
+      description: Returns the API key once after payment confirmed. Requires retrievalToken from POST /checkout/session.
+      security: []
+      tags:
+      - Onboarding
+      parameters:
+      - name: sessionId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Stripe Checkout Session ID (cs_...)
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+        description: retrievalToken from POST /checkout/session
+      responses:
+        '200':
+          description: Session status and API key if ready
+        '401':
+          description: token query param missing
+        '403':
+          description: Invalid token
+  /.well-known/mpp.json:
+    get:
+      operationId: getMppManifest
+      summary: MPP service manifest
+      security: []
+      tags:
+      - Onboarding
+      responses:
+        '200':
+          description: MPP manifest with endpoints
+  /.well-known/x402.json:
+    get:
+      operationId: getX402Manifest
+      summary: x402 discovery manifest — quickstart and service catalog
+      security: []
+      tags:
+      - Onboarding
+      responses:
+        '200':
+          description: x402 manifest
+  /.well-known/agent-instructions.json:
+    get:
+      operationId: getAgentInstructions
+      summary: Agent integration instructions
+      security: []
+      tags:
+      - Onboarding
+      responses:
+        '200':
+          description: Integration guide
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog

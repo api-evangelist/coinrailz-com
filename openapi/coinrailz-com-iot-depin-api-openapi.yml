@@ -1,0 +1,246 @@
+openapi: 3.2.0
+info:
+  title: Coinrailz Com IoT & DePIN API
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-refined-note:
+  - x-payment-manifest differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged IoT & DePIN across 2 of this provider''s published API definitions: coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+tags:
+- name: IoT & DePIN
+  description: IoT device data and fleet telematics
+paths:
+  /x402/fleet-telematics:
+    post:
+      tags:
+      - IoT & DePIN
+      summary: Fleet Telematics
+      description: 'Real-time fleet data from IoT-connected vehicles: GPS location, fuel consumption, driver behavior scores, and route efficiency metrics. Requires registered fleet deviceId.'
+      x-price-usd: 0.1
+      x-featured: true
+      operationId: fleetTelematics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deviceId:
+                  type: string
+                fleetId:
+                  type: string
+                metrics:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Fleet telemetry data
+        '402':
+          description: Payment Required
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/weather-station-data:
+    post:
+      tags:
+      - IoT & DePIN
+      summary: Weather Station Data
+      description: 'Hyperlocal weather data from IoT weather stations: temperature, humidity, pressure, wind speed/direction, and precipitation. Input: coordinates or station ID.'
+      x-price-usd: 0.05
+      operationId: weatherStationData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                stationId:
+                  type: string
+                lat:
+                  type: number
+                lon:
+                  type: number
+                radius_km:
+                  type: number
+      responses:
+        '200':
+          description: Hyperlocal weather measurements
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/iot-sensor-reading:
+    post:
+      tags:
+      - IoT & DePIN
+      summary: IoT Sensor Reading
+      description: 'Single sensor reading from a registered IoT device: temperature, humidity, pressure, CO2, or motion. Requires a registered deviceId. Returns timestamped value with unit and quality flag.'
+      x-price-usd: 0.025
+      operationId: iotSensorReading
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - deviceId
+              properties:
+                deviceId:
+                  type: string
+                sensorType:
+                  type: string
+      responses:
+        '200':
+          description: Current sensor reading with timestamp
+        '402':
+          description: Payment Required
+      x-featured: true
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/iot-device-stream:
+    post:
+      tags:
+      - IoT & DePIN
+      summary: IoT Device Stream
+      description: 'Real-time streaming sensor readings from registered IoT devices: temperature, humidity, pressure, CO2, and motion. Returns latest N readings with timestamps, units, and quality flags.'
+      x-price-usd: 0.25
+      operationId: iotDeviceStream
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - deviceId
+              properties:
+                deviceId:
+                  type: string
+                duration_seconds:
+                  type: integer
+                  default: 60
+      responses:
+        '200':
+          description: Real-time device stream data
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/iot-bulk-data:
+    post:
+      tags:
+      - IoT & DePIN
+      summary: IoT Bulk Data Export
+      description: 'Historical data export from IoT devices: bulk sensor readings filtered by device, time range, and sensor type. Returns paginated timestamped readings with units and quality flags.'
+      x-price-usd: 0.5
+      operationId: iotBulkData
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - deviceId
+              properties:
+                deviceId:
+                  type: string
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+                format:
+                  type: string
+                  enum:
+                  - json
+                  - csv
+                  default: json
+      responses:
+        '200':
+          description: Historical sensor data export
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog
+x-refined-from:
+- coinrailz-com-agent-payment-api-openapi.json
+- coinrailz-com-x402-services-openapi.yml

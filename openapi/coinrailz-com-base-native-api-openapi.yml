@@ -1,0 +1,176 @@
+openapi: 3.2.0
+info:
+  title: Coinrailz Com Base Native API
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-refined-note:
+  - x-payment-manifest differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Base Native across 2 of this provider''s published API definitions: coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+tags:
+- name: Base Native
+paths:
+  /x402/b20-token-info:
+    post:
+      tags:
+      - Base Native
+      summary: B20 Token Info
+      description: Metadata, total supply, compliance mode, and freeze status for any B20 Native Token Standard token on Base mainnet. Returns ERC-20 fields plus B20-specific compliance fields. Gracefully handles plain ERC-20 tokens.
+      x-price-usd: 0.05
+      x-featured: true
+      operationId: b20TokenInfo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - tokenAddress
+              properties:
+                tokenAddress:
+                  type: string
+                  description: B20 or ERC-20 token contract address on Base (0x...)
+      responses:
+        '200':
+          description: B20 token metadata and compliance state
+        '402':
+          description: Payment Required
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/b20-transfer-check:
+    post:
+      tags:
+      - Base Native
+      summary: B20 Transfer Check
+      description: Simulate whether a B20 token transfer will succeed given current freeze/blocklist/allowlist state on Base mainnet. Returns will_succeed, specific blockers (SENDER_FROZEN, RECIPIENT_BLOCKLISTED, MEMO_REQUIRED). Uses live on-chain state.
+      x-price-usd: 0.1
+      x-featured: false
+      operationId: b20TransferCheck
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - tokenAddress
+              - from
+              - to
+              properties:
+                tokenAddress:
+                  type: string
+                  description: B20 token contract address on Base
+                from:
+                  type: string
+                  description: Sender wallet address
+                to:
+                  type: string
+                  description: Recipient wallet address
+                amount:
+                  type: string
+                  description: Transfer amount (human-readable, e.g. "100.00")
+      responses:
+        '200':
+          description: Transfer simulation result with blockers and warnings
+        '402':
+          description: Payment Required
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/b20-compliance-scan:
+    post:
+      tags:
+      - Base Native
+      summary: B20 Compliance Scan
+      description: Deep compliance scan of a wallet across multiple B20 token issuers on Base mainnet. Returns frozen/blocklisted/allowlisted status per token, frozen-until timestamps, and overall risk level (clear/restricted/mixed/unknown).
+      x-price-usd: 0.25
+      x-featured: false
+      operationId: b20ComplianceScan
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - address
+              properties:
+                address:
+                  type: string
+                  description: Wallet address to scan (0x...)
+                tokens:
+                  type: array
+                  items:
+                    type: string
+                  description: List of B20 token contract addresses to check against (max 20)
+      responses:
+        '200':
+          description: Compliance scan results with per-token and overall risk assessment
+        '402':
+          description: Payment Required
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog
+x-refined-from:
+- coinrailz-com-agent-payment-api-openapi.json
+- coinrailz-com-x402-services-openapi.yml

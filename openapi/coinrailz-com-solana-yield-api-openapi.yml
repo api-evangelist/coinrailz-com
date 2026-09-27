@@ -1,0 +1,208 @@
+openapi: 3.2.0
+info:
+  title: Coin Railz Agent Payment Solana Yield API
+  version: 3.0.0
+  description: Production-grade x402 micropayment infrastructure for AI agents.
+  contact:
+    email: support@coinrailz.com
+    url: https://coinrailz.com
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-payment-manifest: https://coinrailz.com/x402/payment-manifest.json
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+- url: https://coinrailz.com
+  description: Production
+security:
+- apiKey: []
+tags:
+- name: Solana Yield
+  description: Non-custodial USDC yield portal on Solana — deposits into Kamino Lending. Agent signs and submits transactions; Coin Railz never holds funds.
+paths:
+  /api/solana-yield/manifest:
+    get:
+      operationId: getSolanaYieldManifest
+      summary: Solana USDC Yield Portal — full agent integration guide
+      description: Machine-readable manifest for the non-custodial Solana USDC yield portal. Returns current APY, step-by-step deposit flow, bridge instructions for EVM agents, idempotency guidance, and signing code snippet. No auth required.
+      security: []
+      tags:
+      - Solana Yield
+      responses:
+        '200':
+          description: Manifest with agent_instructions, cross_chain_note, and comparison
+      x-codeSamples:
+      - lang: Shell
+        label: curl
+        source: curl https://coinrailz.com/api/solana-yield/manifest
+  /api/solana-yield/rates:
+    get:
+      operationId: getSolanaYieldRates
+      summary: Live USDC APY on Kamino Lending (Solana)
+      description: Returns current USDC APY from Kamino Lending on Solana. Sourced from DeFiLlama with on-chain TVL/utilization. Includes comparison with Base/Aave. Free endpoint, no auth required.
+      security: []
+      tags:
+      - Solana Yield
+      responses:
+        '200':
+          description: APY, TVL, utilization, and protocol comparison
+      x-codeSamples:
+      - lang: Shell
+        label: curl
+        source: curl https://coinrailz.com/api/solana-yield/rates
+  /api/solana-yield/stats:
+    get:
+      operationId: getSolanaYieldStats
+      summary: Kamino reserve health — TVL, liquidity, utilization
+      description: Returns Kamino USDC reserve TVL, available liquidity, utilization percentage, and reserve address. Useful for checking if withdrawals are likely to succeed before submitting.
+      security: []
+      tags:
+      - Solana Yield
+      responses:
+        '200':
+          description: Reserve health metrics
+  /api/solana-yield/deposit-tx:
+    post:
+      operationId: buildSolanaDepositTx
+      summary: Build unsigned Solana deposit transaction bundle
+      description: Returns a bundle of 1-2 unsigned Solana VersionedTransactions (fee tx + deposit tx). Agent signs and submits both. Non-custodial — Coin Railz never holds funds. Min $5 USDC. Optionally pass idempotency_key to prevent duplicate fee charges on retry.
+      security: []
+      tags:
+      - Solana Yield
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - wallet
+              - amount_usdc
+              properties:
+                wallet:
+                  type: string
+                  description: Agent's Solana wallet public key (base58)
+                amount_usdc:
+                  type: number
+                  description: 'USDC amount in dollars. Min 5. Example: 10 for $10 USDC.'
+                amount_raw:
+                  type: string
+                  description: 'Alternative: USDC amount in raw lamports (6 decimals). Min 5000000. Overrides amount_usdc if provided.'
+                idempotency_key:
+                  type: string
+                  description: Optional. Unique key (UUID) to prevent duplicate fee charges if you retry. Same key+wallet+amount within 120s returns 409.
+      responses:
+        '200':
+          description: Transaction bundle with base64-encoded transactions and bundle_expires_at
+        '409':
+          description: Duplicate idempotency_key — a pending intent already exists for this wallet/amount/key
+      x-codeSamples:
+      - lang: Shell
+        label: curl
+        source: 'curl -X POST https://coinrailz.com/api/solana-yield/deposit-tx -H ''Content-Type: application/json'' -d ''{"wallet":"YOUR_SOLANA_PUBKEY","amount_usdc":10,"idempotency_key":"uuid-here"}'''
+  /api/solana-yield/confirm:
+    post:
+      operationId: confirmSolanaDeposit
+      summary: Confirm deposit after on-chain submission
+      description: Call after submitting the deposit transaction bundle. Verifies the transaction confirmed on-chain and that the claiming wallet was a signer. Stores confirmed position or pending_verification (keeper reconciles within 60 min if RPC unavailable).
+      security: []
+      tags:
+      - Solana Yield
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - wallet
+              - txSignature
+              properties:
+                wallet:
+                  type: string
+                  description: Agent's Solana wallet public key
+                txSignature:
+                  type: string
+                  description: Base58 transaction signature of the confirmed deposit tx
+                amountUsdcRaw:
+                  type: string
+                  description: 'Optional: raw USDC lamports deposited — used for position tracking'
+      responses:
+        '200':
+          description: Confirmation result with onChainVerified and verificationStatus (confirmed | pending_verification)
+        '400':
+          description: Invalid signature format or transaction failed on-chain
+        '403':
+          description: Wallet is not a signer in the provided transaction
+      x-codeSamples:
+      - lang: Shell
+        label: curl
+        source: 'curl -X POST https://coinrailz.com/api/solana-yield/confirm -H ''Content-Type: application/json'' -d ''{"wallet":"YOUR_PUBKEY","txSignature":"TX_SIG_HERE"}'''
+  /api/solana-yield/position/{wallet}:
+    get:
+      operationId: getSolanaYieldPosition
+      summary: Agent's live USDC position in Kamino Lending
+      description: Returns collateral balance, current USDC value, estimated yield earned, and position status. Free endpoint, no auth required.
+      security: []
+      tags:
+      - Solana Yield
+      parameters:
+      - name: wallet
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Solana wallet public key (base58)
+      responses:
+        '200':
+          description: Position data or empty position with next_action hints
+      x-codeSamples:
+      - lang: Shell
+        label: curl
+        source: curl https://coinrailz.com/api/solana-yield/position/YOUR_SOLANA_PUBKEY
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog

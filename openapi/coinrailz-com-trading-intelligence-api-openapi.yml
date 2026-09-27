@@ -1,0 +1,617 @@
+openapi: 3.2.0
+info:
+  title: Coinrailz Com Trading Intelligence API
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-refined-note:
+  - x-payment-manifest differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Trading Intelligence across 2 of this provider''s published API definitions: coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+tags:
+- name: Trading Intelligence
+  description: Real-time market data and analysis
+paths:
+  /x402/gas-price-oracle:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Gas Price Oracle
+      description: Real-time EIP-1559 gas prices (base fee, priority fee, fast/safe/slow tiers) for Ethereum, Base, Polygon, Arbitrum, and Optimism with USD cost estimates per transaction type.
+      x-price-usd: 0.1
+      operationId: gasPriceOracle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chains:
+                  type: array
+                  items:
+                    type: string
+                  description: 'Chains to check (optional, default: all supported chains)'
+      responses:
+        '200':
+          description: Gas prices across chains
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gasPrices:
+                    type: array
+                    description: Gas prices per chain with USD estimates
+        '402':
+          description: Payment Required
+      x-featured: true
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/token-metadata:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Token Metadata Lookup
+      description: Token name, symbol, decimals, total supply, and contract details for any ERC-20 on Ethereum, Base, Polygon, or Arbitrum. Resolves from on-chain state — no centralized API dependency.
+      x-price-usd: 0.1
+      operationId: tokenMetadata
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - tokenAddress
+              - chain
+              properties:
+                tokenAddress:
+                  type: string
+                  description: Token contract address
+                chain:
+                  type: string
+                  description: Blockchain network (ethereum, base, polygon, etc.)
+      responses:
+        '200':
+          description: Token metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  symbol:
+                    type: string
+                  decimals:
+                    type: integer
+                  totalSupply:
+                    type: string
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/dex-liquidity:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: DEX Liquidity Monitor
+      description: 'Real-time liquidity depth, TVL, price impact, and 24h volume for a token pair across Uniswap V2/V3, Curve, and Aerodrome. Input: token pair + chain.'
+      x-price-usd: 0.2
+      operationId: dexLiquidity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - tokenAddress
+              - chain
+              properties:
+                tokenAddress:
+                  type: string
+                  description: Token contract address
+                chain:
+                  type: string
+                  description: Blockchain network
+      responses:
+        '200':
+          description: Liquidity data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pools:
+                    type: array
+                  totalLiquidity:
+                    type: number
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/approval-manager:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Token Approval Manager
+      description: Check current ERC-20 allowances and generate unsigned approve() calldata for any spender on any EVM chain. Required pre-step before DEX swaps or DeFi protocol interactions.
+      x-price-usd: 0.2
+      operationId: approvalManager
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - tokenAddress
+              - spenderAddress
+              - ownerAddress
+              - chain
+              properties:
+                tokenAddress:
+                  type: string
+                  description: Token contract address
+                spenderAddress:
+                  type: string
+                  description: Spender address to approve
+                ownerAddress:
+                  type: string
+                  description: Token owner address
+                chain:
+                  type: string
+                  description: Blockchain network
+                amount:
+                  type: string
+                  description: 'Amount to approve (optional, default: max)'
+      responses:
+        '200':
+          description: Approval transaction data
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/token-price:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Token Price Feed
+      description: Token price, 24h change, volume, and market cap from CoinGecko and DEX Screener. Covers 10,000+ tokens including long-tail assets unavailable on major centralized exchanges.
+      x-price-usd: 0.25
+      operationId: tokenPrice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - tokenAddress
+              - chain
+              properties:
+                tokenAddress:
+                  type: string
+                  description: Token contract address
+                chain:
+                  type: string
+                  description: Blockchain network
+      responses:
+        '200':
+          description: Token price data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  price:
+                    type: number
+                  change24h:
+                    type: number
+                  volume24h:
+                    type: number
+                  marketCap:
+                    type: number
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/token-sentiment:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Token Sentiment Analyzer
+      description: Social sentiment score for any token from X/Twitter and Reddit. Returns bullish/bearish ratio, momentum direction, and top discussion themes over configurable time windows.
+      x-price-usd: 0.25
+      operationId: tokenSentiment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - tokenSymbol
+              properties:
+                tokenSymbol:
+                  type: string
+                  description: Token symbol (e.g., BTC, ETH, PEPE)
+      responses:
+        '200':
+          description: Sentiment analysis
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sentiment:
+                    type: string
+                    enum:
+                    - bullish
+                    - bearish
+                    - neutral
+                  score:
+                    type: number
+                  momentum:
+                    type: string
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/whale-alerts:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Whale Wallet Alerts
+      description: 'Recent large-value wallet transfers for any token or address: amount, sender/receiver, exchange flow direction, and historical pattern context. Threshold configurable, defaults to >$50K.'
+      x-price-usd: 0.35
+      operationId: whaleAlerts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chain:
+                  type: string
+                  description: Blockchain to monitor
+                minValueUsd:
+                  type: number
+                  description: Minimum transaction value in USD
+      responses:
+        '200':
+          description: Recent whale transactions
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/batch-quote:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Batch Quote Service
+      description: DEX swap quotes for multiple token pairs in a single call. Returns best route, price impact, gas estimate, and minimum received per pair — reduces round-trips for agents comparing multiple swaps.
+      x-price-usd: 0.4
+      operationId: batchQuote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - quotes
+              properties:
+                quotes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      fromToken:
+                        type: string
+                      toToken:
+                        type: string
+                      amount:
+                        type: string
+                      chain:
+                        type: string
+      responses:
+        '200':
+          description: Batch quotes with best prices
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/multi-chain-balance:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Multi-Chain Balance Checker
+      description: Native token and ERC-20 balances for an EVM wallet across Ethereum, Base, Polygon, Arbitrum, Optimism, and 2 more chains in a single call. Returns balances with live USD values.
+      x-price-usd: 0.5
+      operationId: multiChainBalance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - walletAddress
+              properties:
+                walletAddress:
+                  type: string
+                  description: Wallet address to check
+                chains:
+                  type: array
+                  items:
+                    type: string
+                  description: Specific chains to check
+                includeTokens:
+                  type: boolean
+                  description: Include ERC20 token balances
+      responses:
+        '200':
+          description: Balances across chains
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  balances:
+                    type: array
+                  totalValueUsd:
+                    type: number
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/trending-tokens:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Trending Tokens Feed
+      description: 'Top trending tokens ranked by composite score: social volume, price momentum, DEX activity, and whale accumulation patterns. Returns ranked list with 24h stats and risk flags.'
+      x-price-usd: 0.5
+      operationId: trendingTokens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chain:
+                  type: string
+                  description: Filter by chain
+                limit:
+                  type: integer
+                  description: Number of tokens to return
+                  default: 10
+      responses:
+        '200':
+          description: List of trending tokens
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/portfolio-tracker:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Portfolio Tracker
+      description: Real-time portfolio value, PnL, and allocation breakdown for any EVM wallet. Aggregates token balances with live USD prices and 24h performance across multiple chains.
+      x-price-usd: 0.5
+      operationId: portfolioTracker
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - walletAddress
+              properties:
+                walletAddress:
+                  type: string
+                includeHistory:
+                  type: boolean
+      responses:
+        '200':
+          description: Portfolio analysis
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/wallet-risk:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Wallet Risk Analyzer
+      description: 'Multi-factor wallet risk report: sanctions exposure, mixer interactions, darknet market activity, and concentration risk. Returns risk tier (LOW/MEDIUM/HIGH/CRITICAL) with evidence and recommended actions.'
+      x-price-usd: 0.5
+      operationId: walletRisk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - walletAddress
+              - chain
+              properties:
+                walletAddress:
+                  type: string
+                chain:
+                  type: string
+      responses:
+        '200':
+          description: Risk analysis
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  riskScore:
+                    type: number
+                  complianceFlags:
+                    type: array
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/solana-yield-finder:
+    post:
+      tags:
+      - Trading Intelligence
+      summary: Solana Yield Finder
+      description: Real-time Solana lending and yield rates from Kamino, Marginfi, and Solend. Returns APY, TVL, utilization rate, and risk tier per protocol.
+      x-price-usd: 0.05
+      operationId: solanaYieldFinder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: Token symbol to check yield for (e.g., SOL, USDC)
+                minApy:
+                  type: number
+      responses:
+        '200':
+          description: Yield rates across Solana DeFi protocols
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog
+x-refined-from:
+- coinrailz-com-agent-payment-api-openapi.json
+- coinrailz-com-x402-services-openapi.yml

@@ -1,0 +1,231 @@
+openapi: 3.2.0
+info:
+  title: Coinrailz Com Robinhood Chain API
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-refined-note:
+  - x-payment-manifest differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Robinhood Chain across 2 of this provider''s published API definitions: coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+tags:
+- name: Robinhood Chain
+paths:
+  /x402/robinhood-token-price:
+    post:
+      tags:
+      - Robinhood Chain
+      summary: Robinhood Chain Token Price
+      description: Real-time token price and pool data for any token on Robinhood Chain (eip155:4663) via Chainlink SVR feeds. Returns price, 24h change, and top liquidity pool.
+      x-price-usd: 0.6
+      x-featured: true
+      operationId: robinhoodTokenPrice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - address
+              properties:
+                address:
+                  type: string
+                  description: Token contract address on Robinhood Chain (0x...)
+      responses:
+        '200':
+          description: Token price, 24h change, volume, liquidity, pool count, confidence, and data source
+        '402':
+          description: Payment Required
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/robinhood-dex-pools:
+    post:
+      tags:
+      - Robinhood Chain
+      summary: Robinhood Chain DEX Pools
+      description: Top DEX liquidity pools on Robinhood Chain. Pass a token address for token-specific pools, or omit for chain-wide top pools by liquidity. Includes fee tier, 24h volume, and pool addresses.
+      x-price-usd: 1.25
+      x-featured: true
+      operationId: robinhoodDexPools
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: Optional token contract address to filter pools (omit for top pools chain-wide)
+                minLiquidity:
+                  type: number
+                  description: 'Minimum pool liquidity in USD (default: 0)'
+                limit:
+                  type: number
+                  description: 'Maximum number of pools to return (default: 20, max: 50)'
+      responses:
+        '200':
+          description: Array of DEX pools with liquidity, volume, fee tier, and pair details
+        '402':
+          description: Payment Required
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/robinhood-chain-stats:
+    post:
+      tags:
+      - Robinhood Chain
+      summary: Robinhood Chain Health Stats
+      description: 'Chain-level health metrics for Robinhood Chain (eip155:4663): current block height, gas price, validator count, and network TPS via Chainlink on-chain reads.'
+      x-price-usd: 0.75
+      x-featured: false
+      operationId: robinhoodChainStats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+      responses:
+        '200':
+          description: 'Chain stats: latestBlock, gasPriceGwei, totalPools, totalVolume24hUSD, totalLiquidityUSD, topTokens'
+        '402':
+          description: Payment Required
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/rh-stock-price:
+    post:
+      tags:
+      - Robinhood Chain
+      summary: Robinhood Chain Stock Price Feed
+      description: Live Chainlink SVR price feeds for 35+ stock tokens (AAPL, NVDA, SPY, TSLA, META, AMZN, MSFT, GOOGL, COIN, PLTR, and more) on Robinhood Chain. 8-decimal precision. Batch up to 10 symbols per call.
+      x-price-usd: 0.05
+      x-featured: false
+      operationId: rhStockPrice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                symbol:
+                  type: string
+                  description: Single stock/ETF/crypto symbol (e.g. 'AAPL')
+                symbols:
+                  type: array
+                  items:
+                    type: string
+                  description: Batch of up to 10 symbols (e.g. ['AAPL','NVDA','SPY'])
+      responses:
+        '200':
+          description: 'prices[]: {symbol, priceUSD, updatedAt, staleSeconds, fresh, feedAddress, chainId}'
+        '402':
+          description: Payment Required
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/rh-bridge-usdc:
+    post:
+      tags:
+      - Robinhood Chain
+      summary: Robinhood Chain Bootstrap Bridge
+      description: Bridge 0.50 USDC from Base (chainId 8453) to USDG on Robinhood Chain (chainId 4663) via Across Protocol. Treasury-funded — no pre-approval required. Returns unsigned bridge calldata; USDG arrives in ~30 seconds. Ideal for bootstrapping an RH Chain agent wallet.
+      x-price-usd: 0.75
+      x-featured: false
+      operationId: rhBridgeUsdc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - recipient
+              properties:
+                recipient:
+                  type: string
+                  description: 0x wallet address on Robinhood Chain to receive USDG
+                note:
+                  type: string
+                  description: Optional memo for your records
+      responses:
+        '200':
+          description: depositTx, recipient, amountBridgedUSDC, estimatedUSDGOutput, estimatedFillTimeSec, baseScan, rhScan
+        '402':
+          description: Payment Required
+        '500':
+          description: Bridge failed (e.g. treasury balance insufficient)
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog
+x-refined-from:
+- coinrailz-com-agent-payment-api-openapi.json
+- coinrailz-com-x402-services-openapi.yml

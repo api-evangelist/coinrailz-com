@@ -1,0 +1,506 @@
+openapi: 3.2.0
+info:
+  title: Coinrailz Com Satellite Intelligence API
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-refined-note:
+  - x-payment-manifest differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Satellite Intelligence across 2 of this provider''s published API definitions: coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+tags:
+- name: Satellite Intelligence
+  description: NASA/ESA satellite data APIs
+paths:
+  /x402/satellite-earthdata:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: NASA Earthdata Gateway
+      description: 'NASA Earthdata gateway: precipitation, granule search, SST, soil moisture, and ocean color in one endpoint. Specify the product field to select dataset type and coordinates.'
+      x-price-usd: 0.25
+      operationId: satelliteEarthdata
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - product
+              properties:
+                product:
+                  type: string
+                  enum:
+                  - precipitation
+                  - granules
+                  - sst
+                  - soil-moisture
+                  - ocean-color
+                lat:
+                  type: number
+                lon:
+                  type: number
+                date:
+                  type: string
+                  description: ISO date string
+      responses:
+        '200':
+          description: NASA satellite data for selected product
+        '402':
+          description: Payment Required
+      x-featured: true
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/earthdata-granules:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: NASA Earthdata Granule Search
+      description: Search 1B+ NASA satellite granules by bounding box, date range, and collection (Landsat/Sentinel/MODIS/VIIRS). Returns download URLs and granule metadata.
+      x-price-usd: 0.25
+      operationId: earthdataGranules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bbox:
+                  type: string
+                  description: 'Bounding box: west,south,east,north'
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+                collection:
+                  type: string
+      responses:
+        '200':
+          description: Matching NASA granules with download URLs
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/earthdata-precipitation:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: NASA Precipitation Data
+      description: 'Real-time observed rain rate at any global coordinate from NASA IMERG. Input: latitude, longitude, and date.'
+      x-price-usd: 0.25
+      operationId: earthdataPrecipitation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - lat
+              - lon
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+                date:
+                  type: string
+      responses:
+        '200':
+          description: Precipitation rate and accumulation data
+        '402':
+          description: Payment Required
+      x-featured: true
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/earthdata-sst:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: NASA Sea Surface Temperature
+      description: 'Sea surface temperature at any ocean coordinate from NASA MUR-JPL multi-scale analysis. Sub-meter spatial accuracy. Input: lat/lon and date.'
+      x-price-usd: 0.25
+      operationId: earthdataSst
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - lat
+              - lon
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+                date:
+                  type: string
+      responses:
+        '200':
+          description: Sea surface temperature in Celsius and Kelvin
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/earthdata-soil-moisture:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: NASA Soil Moisture
+      description: Soil moisture granule discovery from NASA SMAP SPL3SMP at 36km resolution. Returns nearest granule, volumetric water content estimate, and quality flag.
+      x-price-usd: 0.25
+      operationId: earthdataSoilMoisture
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - lat
+              - lon
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+                date:
+                  type: string
+      responses:
+        '200':
+          description: Soil moisture measurements and granule metadata
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/earthdata-ocean-color:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: NASA Ocean Color
+      description: 'MODIS Aqua ocean chlorophyll-a concentration via NASA CMR at 4km resolution. Input: coordinates or bounding box and date range.'
+      x-price-usd: 0.25
+      operationId: earthdataOceanColor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - lat
+              - lon
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+                date:
+                  type: string
+      responses:
+        '200':
+          description: Ocean chlorophyll-a concentration data
+        '402':
+          description: Payment Required
+      x-featured: true
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/fire-alerts:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: NASA Fire Alerts
+      description: Real-time active fire detections from NASA FIRMS (MODIS + VIIRS). Returns fire radiative power, confidence level, and coordinates for any bounding box within the past 24 hours.
+      x-price-usd: 0.05
+      operationId: fireAlerts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+                radius_km:
+                  type: number
+                  default: 100
+                days:
+                  type: integer
+                  default: 1
+      responses:
+        '200':
+          description: Active fire detections with coordinates and confidence
+        '402':
+          description: Payment Required
+      x-featured: true
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/weather-imagery:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: Weather Satellite Imagery
+      description: 'High-resolution weather satellite imagery from NASA GIBS: GOES, MODIS, and Suomi-NPP. Input: bounding box, date, and imagery type (IR/visible/water vapor).'
+      x-price-usd: 0.05
+      operationId: weatherImagery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+                layer:
+                  type: string
+                  description: GIBS layer identifier
+                date:
+                  type: string
+      responses:
+        '200':
+          description: Satellite imagery tile URL and metadata
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/vegetation:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: Vegetation Health (NDVI)
+      description: NDVI vegetation health indices from NASA MODIS and ESA Sentinel-2 for any global coordinate or region. Returns current health score, historical trend, and seasonal anomaly.
+      x-price-usd: 0.1
+      operationId: vegetation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+                date:
+                  type: string
+      responses:
+        '200':
+          description: NDVI index and vegetation health classification
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/flood-detection:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: Flood Detection
+      description: 'SAR-based flood extent mapping from ESA Sentinel-1 — all-weather, day/night capable. Input: bounding box and date. Returns flood polygon and affected area estimate in km².'
+      x-price-usd: 0.1
+      operationId: floodDetection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+                bbox:
+                  type: string
+      responses:
+        '200':
+          description: Flood extent and affected area analysis
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/air-quality:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: Air Quality (Sentinel-5P)
+      description: Atmospheric pollutant concentrations (NO2, SO2, CO, O3, aerosols) from ESA Sentinel-5P TROPOMI satellite for any global coordinate or bounding box.
+      x-price-usd: 0.05
+      x-featured: true
+      operationId: airQuality
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+                pollutant:
+                  type: string
+                  enum:
+                  - NO2
+                  - SO2
+                  - CO
+                  - O3
+                  - aerosol
+      responses:
+        '200':
+          description: Atmospheric pollutant concentration data
+        '402':
+          description: Payment Required
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/land-use:
+    post:
+      tags:
+      - Satellite Intelligence
+      summary: Land Use Classification
+      description: 'Land cover classification from NASA Landsat and ESA Sentinel WorldCover. Input: bounding box and date. Returns dominant land class (urban/cropland/forest/water/etc.) with confidence.'
+      x-price-usd: 0.15
+      operationId: landUse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+                year:
+                  type: integer
+      responses:
+        '200':
+          description: Land cover classification and change detection
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog
+x-refined-from:
+- coinrailz-com-agent-payment-api-openapi.json
+- coinrailz-com-x402-services-openapi.yml

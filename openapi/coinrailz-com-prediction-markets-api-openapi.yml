@@ -1,0 +1,342 @@
+openapi: 3.2.0
+info:
+  title: Coinrailz Com Prediction Markets API
+  x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
+
+
+    For a paid call, send the exact documented HTTP method, URL, content type, and JSON body without a payment header. The service returns HTTP 402 with x402Version 2 and an accepts array. Select one complete offer your wallet supports. Circle Agent Wallet and Gateway clients should prefer the eip155:5042 Arc Mainnet offer when available; Base clients can select eip155:8453. Preserve the selected offer exactly, including scheme, network, asset, amount, payTo, facilitator, resource, and any extra metadata. Sign that authorization with an x402 v2-compatible client, then retry the identical request with PAYMENT-SIGNATURE. X-PAYMENT remains available for compatible legacy clients. Do not send a standalone token transfer or construct a transaction-hash wrapper from this guidance.
+
+
+    Validate required fields and constraints from each operation''s request schema before authorizing payment. Treat risk, compliance, market, yield, and investment outputs as informational analysis rather than legal, banking, or investment advice. Prices are per call and the live 402 challenge is authoritative. Responses are JSON unless the operation states otherwise.'
+  x-payment-info:
+    protocol: x402
+    x402Version: 2
+    network: eip155:8453
+    asset: USDC
+    assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+    recipientWallet: '0xa4bbe37f9a6ae2dc36a607b91eb148c0ae163c91'
+    facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    supportedNetworks:
+    - network: eip155:8453
+      asset: USDC
+      assetAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+      facilitator: https://api.cdp.coinbase.com/platform/v2/x402
+    - network: eip155:5042
+      asset: USDC
+      assetAddress: '0x3600000000000000000000000000000000000000'
+      gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
+      facilitator: https://gateway-api.circle.com
+  x-refined-note:
+  - x-payment-manifest differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Prediction Markets across 2 of this provider''s published API definitions: coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://coinrailz.com
+  description: Current environment
+tags:
+- name: Prediction Markets
+  description: Polymarket, Kalshi, and prediction data
+paths:
+  /x402/polymarket-events:
+    post:
+      tags:
+      - Prediction Markets
+      summary: Polymarket Events
+      description: Trending Polymarket prediction market events with current yes/no prices, volume, and liquidity across politics, crypto, sports, and science.
+      x-price-usd: 0.25
+      operationId: polymarketEvents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                limit:
+                  type: integer
+                  default: 10
+      responses:
+        '200':
+          description: Trending prediction markets
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/polymarket-odds:
+    post:
+      tags:
+      - Prediction Markets
+      summary: Polymarket Odds
+      description: Current odds and price history for a specific Polymarket event. Returns yes/no bid/ask, 24h volume, and last trade timestamp.
+      x-price-usd: 0.5
+      operationId: polymarketOdds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - eventId
+              properties:
+                eventId:
+                  type: string
+      responses:
+        '200':
+          description: Event odds and volume
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/polymarket-search:
+    post:
+      tags:
+      - Prediction Markets
+      summary: Polymarket Search
+      description: Search Polymarket prediction markets by keyword or topic. Returns matching events with current prices, volume, and market close date.
+      x-price-usd: 0.25
+      operationId: polymarketSearch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+              properties:
+                query:
+                  type: string
+                limit:
+                  type: integer
+                  default: 10
+      responses:
+        '200':
+          description: Search results
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/prediction-market-odds:
+    post:
+      tags:
+      - Prediction Markets
+      summary: Prediction Market Odds
+      description: Aggregated prediction market odds from Polymarket and Kalshi for any topic. Returns consensus probability with per-platform breakdown and total volume.
+      x-price-usd: 0.5
+      operationId: predictionMarketOdds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - topic
+              properties:
+                topic:
+                  type: string
+                platforms:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Aggregated odds
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/kalshi-markets:
+    post:
+      tags:
+      - Prediction Markets
+      summary: Kalshi Markets
+      description: Active markets from Kalshi, a CFTC-regulated prediction exchange. Returns yes/no ask prices, volume, and open interest. Filter by category or keyword.
+      x-price-usd: 0.25
+      operationId: kalshiMarkets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                  default: 20
+                category:
+                  type: string
+      responses:
+        '200':
+          description: Active Kalshi markets
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/kalshi-odds:
+    post:
+      tags:
+      - Prediction Markets
+      summary: Kalshi Odds
+      description: Current yes/no prices and orderbook depth for a specific Kalshi market. Returns bid/ask spread, last price, volume, and open interest for CFTC-regulated event contracts.
+      x-price-usd: 0.5
+      operationId: kalshiOdds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - marketId
+              properties:
+                marketId:
+                  type: string
+                  description: Kalshi market ticker ID
+      responses:
+        '200':
+          description: Kalshi market odds and orderbook
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/kalshi-search:
+    post:
+      tags:
+      - Prediction Markets
+      summary: Kalshi Search
+      description: Search Kalshi prediction markets by keyword or event type. Returns matching CFTC-regulated markets with current yes prices, volume, and expiration dates.
+      x-price-usd: 0.25
+      operationId: kalshiSearch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+              properties:
+                query:
+                  type: string
+                limit:
+                  type: integer
+                  default: 10
+      responses:
+        '200':
+          description: Kalshi search results
+        '402':
+          description: Payment Required
+      x-featured: false
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+  /x402/prediction-market-spread:
+    post:
+      tags:
+      - Prediction Markets
+      summary: Prediction Market Cross-Platform Spread
+      description: 'Live cross-platform spread analysis: Polymarket vs Kalshi for identical real-world events. Returns YES probability divergence, arbitrage opportunity ranking by spread magnitude, matchConfidence, actionHint, and edgeBps per opportunity.'
+      x-price-usd: 0.25
+      x-featured: true
+      operationId: predictionMarketSpread
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                  default: 10
+                  description: Max opportunities to return (1-25)
+                minSpreadPct:
+                  type: number
+                  default: 0
+                  description: Minimum spread in percentage points (e.g. 3 filters out spreads below 3pp)
+                minConfidence:
+                  type: string
+                  enum:
+                  - low
+                  - medium
+                  - high
+                  description: Minimum match confidence tier to include
+      responses:
+        '200':
+          description: Cross-platform spread opportunities ranked by magnitude
+        '402':
+          description: Payment Required
+      security:
+      - apiKey: []
+    servers:
+    - url: https://coinrailz.com
+      description: Current environment
+    - url: https://coinrailz.com
+      description: Production
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Prepaid credits API key (cr_live_...). Obtain via GET /api/m2m/credits/trial (free $5) or POST /api/m2m/credits/checkout/session (paid).
+    bearerApiKey:
+      type: http
+      scheme: bearer
+      description: 'Same cr_live_ key as X-API-KEY, passed as Authorization: Bearer <key>.'
+    x402:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: x402 protocol on-chain USDC payment. Base64url-encoded signed payment payload. See /.well-known/x402.json for facilitator details.
+    mpp:
+      type: http
+      scheme: payment
+      description: 'MPP (Machine Payments Protocol) credential. Authorization: Payment <base64-credential>. See /.well-known/mpp.json.'
+externalDocs:
+  description: Full x402 service catalog
+  url: https://coinrailz.com/x402/catalog
+x-refined-from:
+- coinrailz-com-agent-payment-api-openapi.json
+- coinrailz-com-x402-services-openapi.yml

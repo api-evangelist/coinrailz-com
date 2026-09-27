@@ -34,68 +34,13 @@ tags:
 - MCP
 - A2A
 apis:
-- aid: coinrailz-com:agent-payment-api
-  name: Coin Railz Agent Payment API
-  description: 'The full Coin Railz surface: onboarding and prepaid-credit operations (free $5 trial key, Stripe
-    hosted checkout), the 80 metered /x402/<service> endpoints, MPP (Machine Payments Protocol) twins of the core
-    services, the ERC-4626 USDC yield vault on Base and the Kamino-backed Solana yield portal, plus the discovery
-    manifests. OpenAPI 3.1.0, 106 operations, all with operationIds; auth is X-API-KEY / Bearer (cr_live_ prepaid
-    credits), x402 X-PAYMENT or MPP Authorization: Payment.'
-  image: https://coinrailz.com/apple-touch-icon.png
-  humanURL: https://coinrailz.com/developers
-  baseURL: https://coinrailz.com
-  tags:
-  - Payments
-  - Agents
-  - x402
-  - Yield
-  - Onboarding
-  properties:
-  - type: OpenAPI
-    url: openapi/coinrailz-com-agent-payment-api-openapi.yml
-  - type: OpenAPI
-    name: OpenAPI (provider-hosted)
-    url: https://coinrailz.com/openapi.json
-  - type: Documentation
-    url: https://coinrailz.com/docs
-  - type: Overlay
-    url: overlays/coinrailz-com-agent-payment-api-overlay.yaml
-  - type: ErrorCatalog
-    url: errors/coinrailz-com-problem-types.yml
-- aid: coinrailz-com:x402-services
-  name: Coin Railz x402 Micropayment Services
-  description: 'The 80 pay-per-request services as a standalone OpenAPI 3.0.3 contract (one POST /x402/<service>
-    per service, price in the description): gas and token oracles, DEX liquidity, whale alerts, wallet risk, portfolio
-    analytics, smart-contract audits, bridge quotes, agent wallets and KYA identity, Kalshi/Polymarket odds, NASA
-    Earthdata and ESA imagery, fleet telematics and sensor data, GPT-4o-mini inference, property valuation, fraud
-    and AML checks. Each endpoint returns an HTTP 402 x402 v2 challenge until paid.'
-  image: https://coinrailz.com/apple-touch-icon.png
-  humanURL: https://coinrailz.com/x402/catalog
-  baseURL: https://coinrailz.com
-  tags:
-  - x402
-  - Micropayments
-  - DeFi
-  - Prediction Markets
-  - Satellite Data
-  - IoT
-  - AI Inference
-  properties:
-  - type: OpenAPI
-    url: openapi/coinrailz-com-x402-services-openapi.yml
-  - type: OpenAPI
-    name: OpenAPI (provider-hosted)
-    url: https://coinrailz.com/openapi-x402-services.json
-  - type: Overlay
-    url: overlays/coinrailz-com-x402-services-overlay.yaml
-  - type: Pricing
-    url: https://coinrailz.com/.well-known/pricing.json
 - aid: coinrailz-com:mcp
   name: Coin Railz MCP Server
-  description: 'Remote MCP server on the primary domain: POST https://coinrailz.com/mcp (JSON-RPC 2.0). tools/list
-    is open and returns 80 tools with input and output schemas; tool calls are metered (X-API-KEY prepaid credits
-    or x402). A local stdio server ships as the PyPI package coinrailz-mcp. Every tool binds one-to-one to a /x402/<service>
-    operation in the x402 services OpenAPI (see the tool crosswalk).'
+  description: >-
+    Remote MCP server on the primary domain: POST https://coinrailz.com/mcp (JSON-RPC 2.0). tools/list
+    is open and returns 80 tools with input and output schemas; tool calls are metered (X-API-KEY prepaid
+    credits or x402). A local stdio server ships as the PyPI package coinrailz-mcp. Every tool binds one-to-one
+    to a /x402/<service> operation in the x402 services OpenAPI (see the tool crosswalk).
   image: https://coinrailz.com/apple-touch-icon.png
   humanURL: https://coinrailz.com/mcp-integration-guide
   baseURL: https://coinrailz.com/mcp
@@ -110,12 +55,357 @@ apis:
     url: mcp/coinrailz-com-tool-crosswalk.yml
   - type: Documentation
     url: https://coinrailz.com/.well-known/mcp-integration.json
+- aid: coinrailz-com:coinrailz-com-ai-services-api
+  name: Coin Railz AI Services API
+  description: Pay-per-call AI inference
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - AI Services
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-ai-services-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-base-native-api
+  name: Coin Railz Base Native API
+  description: The Base Native API from Coin Railz — 3 operation(s) for base native.
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Base Native
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-base-native-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-defi-yield-api
+  name: Coin Railz DeFi & Yield API
+  description: The DeFi & Yield API from Coin Railz — 4 operation(s) for defi & yield.
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - DeFi & Yield
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-defi-yield-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-developer-tools-api
+  name: Coin Railz Developer Tools API
+  description: The Developer Tools API from Coin Railz — 1 operation(s) for developer tools.
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Developer Tools
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-developer-tools-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-discovery-api
+  name: Coin Railz Discovery API
+  description: Test and discovery endpoints
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-discovery-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-execution-api
+  name: Coin Railz Execution API
+  description: Transaction building and wallet services
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Execution
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-execution-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-investment-api
+  name: Coin Railz Investment API
+  description: Trading signals and portfolio optimization
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Investment
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-investment-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-iot-depin-api
+  name: Coin Railz IoT & DePIN API
+  description: IoT device data and fleet telematics
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - IoT & DePIN
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-iot-depin-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-market-intelligence-api
+  name: Coin Railz Market Intelligence API
+  description: Arbitrage and risk analysis
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Market Intelligence
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-market-intelligence-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-mpp-api
+  name: Coin Railz MPP API
+  description: MPP (Machine Payments Protocol) endpoints — pathUSD via Tempo. See /.well-known/mpp.json
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - MPP
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-mpp-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-onboarding-api
+  name: Coin Railz Onboarding API
+  description: Get an API key or checkout session — no wallet required
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Onboarding
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-onboarding-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-prediction-markets-api
+  name: Coin Railz Prediction Markets API
+  description: Polymarket, Kalshi, and prediction data
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Prediction Markets
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-prediction-markets-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-premium-api
+  name: Coin Railz Premium API
+  description: High-value professional services
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Premium
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-premium-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-real-estate-api
+  name: Coin Railz Real Estate API
+  description: Property and construction analytics
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Real Estate
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-real-estate-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-risk-compliance-apis-api
+  name: Coin Railz Risk & Compliance APIs API
+  description: >-
+    Informational technical risk and compliance-analysis outputs; not banking, legal, or regulated advice
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Risk & Compliance APIs
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-risk-compliance-apis-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-robinhood-chain-api
+  name: Coin Railz Robinhood Chain API
+  description: The Robinhood Chain API from Coin Railz — 5 operation(s) for robinhood chain.
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Robinhood Chain
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-robinhood-chain-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-rwa-tokenization-api
+  name: Coin Railz RWA & Tokenization API
+  description: The RWA & Tokenization API from Coin Railz — 2 operation(s) for rwa & tokenization.
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - RWA & Tokenization
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-rwa-tokenization-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-satellite-intelligence-api
+  name: Coin Railz Satellite Intelligence API
+  description: NASA/ESA satellite data APIs
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Satellite Intelligence
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-satellite-intelligence-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-solana-yield-api
+  name: Coin Railz Solana Yield API
+  description: >-
+    Non-custodial USDC yield portal on Solana — deposits into Kamino Lending. Agent signs and submits
+    transactions; Coin Railz never holds funds.
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Solana Yield
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-solana-yield-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-trading-intelligence-api
+  name: Coin Railz Trading Intelligence API
+  description: Real-time market data and analysis
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Trading Intelligence
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-trading-intelligence-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
+- aid: coinrailz-com:coinrailz-com-yield-api
+  name: Coin Railz Yield API
+  description: >-
+    Non-custodial USDC yield vault — ERC-4626 auto-routing across Aave v3, Compound v3, and Morpho Blue
+    on Base. No lockup, 0% exit fee.
+  humanURL: https://coinrailz.com/developers
+  baseURL: https://coinrailz.com/mcp
+  tags:
+  - Yield
+  properties:
+  - type: OpenAPI
+    url: openapi/coinrailz-com-yield-api-openapi.yml
+  - type: Documentation
+    url: https://coinrailz.com/docs
+  - type: ErrorCatalog
+    url: errors/coinrailz-com-problem-types.yml
+  - type: Pricing
+    url: https://coinrailz.com/.well-known/pricing.json
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/coinrailz-com-agent-payment-api-overlay.yaml
+- type: Overlay
+  url: overlays/coinrailz-com-x402-services-overlay.yaml
 - type: DomainSecurity
   url: security/coinrailz-com-domain-security.yml
 - type: Authentication
@@ -201,3 +491,19 @@ x-enrichment:
   status: enriched
   artifacts_added: 47
   pass: local-v3
+x-x402:
+  verified: true
+  probed: '2026-09-24'
+  url: "https://coinrailz.com/x402/ping"
+  evidence:
+  - "header:payment-required"
+  - "body:x402Version"
+  - "body:accepts[scheme,payTo,asset]"
+  control: 200
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://coinrailz.com/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3.0"
+  control: 404
