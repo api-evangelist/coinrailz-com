@@ -1,8 +1,7 @@
 {
   "provider": "coinrailz-com",
   "sources": [
-    "_original/coinrailz-com-agent-payment-api-openapi.json",
-    "coinrailz-com-x402-services-openapi.yml"
+    "_original/coinrailz-com-agent-payment-api-openapi.json"
   ],
   "outputs": [
     "coinrailz-com-ai-services-api-openapi.yml",
@@ -27,14 +26,11 @@
     "coinrailz-com-trading-intelligence-api-openapi.yml",
     "coinrailz-com-yield-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation",
-    "archived openapi/coinrailz-com-x402-services-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
-    "1 archived document(s) dropped as subsets of other archived documents",
+    "2 archived document(s) dropped as subsets of other archived documents",
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "coinrailz-com-agent-payment-api-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "coinrailz-com-agent-payment-api-openapi.json: declared missing tag: Base Native",
@@ -42,34 +38,31 @@
     "coinrailz-com-agent-payment-api-openapi.json: declared missing tag: Developer Tools",
     "coinrailz-com-agent-payment-api-openapi.json: declared missing tag: RWA & Tokenization",
     "coinrailz-com-agent-payment-api-openapi.json: declared missing tag: Robinhood Chain",
-    "coinrailz-com-x402-services-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "coinrailz-com-x402-services-openapi.yml: declared missing tag: Base Native",
-    "coinrailz-com-x402-services-openapi.yml: declared missing tag: DeFi & Yield",
-    "coinrailz-com-x402-services-openapi.yml: declared missing tag: Developer Tools",
-    "coinrailz-com-x402-services-openapi.yml: declared missing tag: RWA & Tokenization",
-    "coinrailz-com-x402-services-openapi.yml: declared missing tag: Robinhood Chain",
-    "tag 'AI Services' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Base Native' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'DeFi & Yield' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Developer Tools' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Discovery' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Execution' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Investment' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'IoT & DePIN' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Market Intelligence' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Prediction Markets' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Premium' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'RWA & Tokenization' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Real Estate' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Risk & Compliance APIs' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Robinhood Chain' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Satellite Intelligence' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "tag 'Trading Intelligence' spans 2 source specs (coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml): per-path servers applied",
-    "superseded outputs removed: coinrailz-com-agent-payment-api-openapi.yml",
-    "apis.yml register: written (+21 apis, 22 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
+    "_original/coinrailz-com-x402-services-openapi.yml: archived document superseded by a larger archived document",
     "_original/coinrailz-com-x402-services-openapi.json: archived document superseded by a larger archived document",
-    "coinrailz-com-agent-payment-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+    "coinrailz-com-ai-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-base-native-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-defi-yield-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-developer-tools-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-execution-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-investment-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-iot-depin-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-market-intelligence-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-mpp-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-onboarding-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-prediction-markets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-premium-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-real-estate-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-risk-compliance-apis-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-robinhood-chain-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-rwa-tokenization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-satellite-intelligence-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-solana-yield-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-trading-intelligence-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "coinrailz-com-yield-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

@@ -1,6 +1,11 @@
 openapi: 3.2.0
 info:
-  title: Coinrailz Com Satellite Intelligence API
+  title: Coin Railz Agent Payment Satellite Intelligence API
+  version: 3.0.0
+  description: Production-grade x402 micropayment infrastructure for AI agents.
+  contact:
+    email: support@coinrailz.com
+    url: https://coinrailz.com
   x-guidance: 'Use Coin Railz when an agent needs paid, structured financial or operational data without creating an account or API key. Choose the operation by its summary, description, tags, input schema, and x-price-usd. Useful starting points include first-call for a low-cost payment test; token-metadata, gas-price-oracle, wallet-risk, approval-manager, and transaction-builder for transaction preparation; compliance-check for informational risk screening; prediction-market-odds for market research; and solana-yield-finder for yield discovery.
 
 
@@ -26,13 +31,14 @@ info:
       assetAddress: '0x3600000000000000000000000000000000000000'
       gatewayVerifier: '0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE'
       facilitator: https://gateway-api.circle.com
-  x-refined-note:
-  - x-payment-manifest differs across the merged source definitions and was not carried
-  version: '1.0'
-  description: 'Operations tagged Satellite Intelligence across 2 of this provider''s published API definitions: coinrailz-com-agent-payment-api-openapi.json, coinrailz-com-x402-services-openapi.yml. Each path carries the servers of the definition it was published in.'
+  x-payment-manifest: https://coinrailz.com/x402/payment-manifest.json
 servers:
 - url: https://coinrailz.com
   description: Current environment
+- url: https://coinrailz.com
+  description: Production
+security:
+- apiKey: []
 tags:
 - name: Satellite Intelligence
   description: NASA/ESA satellite data APIs
@@ -75,13 +81,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: true
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/earthdata-granules:
     post:
       tags:
@@ -112,13 +111,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: false
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/earthdata-precipitation:
     post:
       tags:
@@ -149,13 +141,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: true
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/earthdata-sst:
     post:
       tags:
@@ -186,13 +171,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: false
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/earthdata-soil-moisture:
     post:
       tags:
@@ -223,13 +201,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: false
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/earthdata-ocean-color:
     post:
       tags:
@@ -260,13 +231,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: true
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/fire-alerts:
     post:
       tags:
@@ -297,13 +261,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: true
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/weather-imagery:
     post:
       tags:
@@ -333,13 +290,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: false
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/vegetation:
     post:
       tags:
@@ -366,13 +316,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: false
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/flood-detection:
     post:
       tags:
@@ -399,13 +342,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: false
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/air-quality:
     post:
       tags:
@@ -438,13 +374,6 @@ paths:
           description: Atmospheric pollutant concentration data
         '402':
           description: Payment Required
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
   /x402/land-use:
     post:
       tags:
@@ -471,13 +400,6 @@ paths:
         '402':
           description: Payment Required
       x-featured: false
-      security:
-      - apiKey: []
-    servers:
-    - url: https://coinrailz.com
-      description: Current environment
-    - url: https://coinrailz.com
-      description: Production
 components:
   securitySchemes:
     apiKey:
@@ -501,6 +423,3 @@ components:
 externalDocs:
   description: Full x402 service catalog
   url: https://coinrailz.com/x402/catalog
-x-refined-from:
-- coinrailz-com-agent-payment-api-openapi.json
-- coinrailz-com-x402-services-openapi.yml
