@@ -402,6 +402,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/coinrailz-com-capability-edges.yml
+  name: Coin Railz Business Capability Map
 - type: Overlay
   url: overlays/coinrailz-com-agent-payment-api-overlay.yaml
 - type: Overlay
