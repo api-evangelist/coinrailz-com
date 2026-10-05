@@ -1,0 +1,12 @@
+{
+ "url": "https://coinrailz.com/openapi.json",
+ "requested_url": "https://coinrailz.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 84253,
+ "sha256": "57b16f03d4288752ca6489faeb3fe16fd1b284f9c0791bdf8dd1a0740da3bfd7",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
