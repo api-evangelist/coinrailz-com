@@ -225,3 +225,40 @@ other_fees:
     switch: 0%
   solana_fee_percentage: 0.005
 enterprise: https://coinrailz.com/enterprise (contact page; no published enterprise price)
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  units: []
+  plans:
+  - name: Pay-per-call (x402)
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: Credits $5
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: Credits $10
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: Credits $25
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: Credits $100
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
