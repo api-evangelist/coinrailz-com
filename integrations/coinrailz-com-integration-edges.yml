@@ -98,10 +98,113 @@ edges:
     detected: '2026-10-15'
   detected_by: sweep-ai-agents.py
   first_seen: '2026-10-15'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@coinrailz/agent-payments
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@coinrailz/agent-payments'
+      version: 1.2.0
+      released: '2026-07-21'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@coinrailz/agent-payments
+      repo_leg: domain:coinrailz.com
+      publisher_leg: email:coinrailz.com
+      matched_by: domain
+    - name: '@coinrailz/agent-payments-solana'
+      version: 1.0.7
+      released: '2026-01-04'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@coinrailz/agent-payments-solana
+      repo_leg: domain:coinrailz.com
+      publisher_leg: email:coinrailz.com
+      matched_by: domain
+    - name: '@coinrailz/iot-payments'
+      version: 1.1.0
+      released: '2026-01-19'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@coinrailz/iot-payments
+      repo_leg: domain:coinrailz.com
+      publisher_leg: email:coinrailz.com
+      matched_by: domain
+    - name: '@coinrailz/plugin-coinrailz'
+      version: 1.0.1
+      released: '2025-12-30'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@coinrailz/plugin-coinrailz
+      repo_leg: github-org:tdnupe3
+      publisher_leg: org:coinrailz
+      matched_by: github-org
+    - name: coinrailz
+      version: 1.3.2
+      released: '2026-08-15'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/coinrailz
+      repo_leg: domain:coinrailz.com
+      publisher_leg: email:coinrailz.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: PyPI
+  partner: pypi
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Python)
+  evidence: https://pypi.org/project/coinrailz/
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public registry JSON)
+    spec_file: null
+    language: Python
+    packages:
+    - name: coinrailz
+      version: 1.2.0
+      released: '2026-07-21'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/coinrailz/
+      repo_leg: domain:coinrailz.com
+      publisher_leg: email:coinrailz.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 generated: '2026-10-14'
 method: searched
 checked:
 - https://a2aregistry.org/api/agents
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
 - https://registry.modelcontextprotocol.io/v0/servers
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 source:
 - https://a2aregistry.org/api/agents
