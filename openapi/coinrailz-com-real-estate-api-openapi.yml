@@ -149,3 +149,9 @@ components:
 externalDocs:
   description: Full x402 service catalog
   url: https://coinrailz.com/x402/catalog
+x-provenance:
+  method: harvested
+  publisher: Coin Railz
+  source: https://coinrailz.com/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
